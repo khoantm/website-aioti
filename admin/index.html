@@ -103,6 +103,26 @@ details.grp>div{padding:0 16px 14px}
 .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:9px;letter-spacing:.03em}
 .tag.new{background:var(--sun);color:var(--on-sun)}
 .tag.cov{background:var(--brand);color:#fff}
+.it.sel{border-color:var(--brand);box-shadow:0 0 0 2px rgba(163,16,0,.18)}
+.ck{position:absolute;right:5px;top:5px;width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.92);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.ck input{width:18px;height:18px;accent-color:var(--brand);cursor:pointer}
+.tb{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.tb .ib{height:38px;font-size:14px}
+.tb .ib.del:not(:disabled){background:#FDECEA;border-color:#F3C4BE}
+.tb .ib:disabled{opacity:.45}
+.dup{background:var(--cloud);border:1.5px solid var(--sun);border-radius:12px;padding:14px;margin:0 0 12px}
+.dup h3{font-size:16px;margin-bottom:4px}
+.dgrp{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+.dgrp p{font-size:13px;color:var(--muted);margin-bottom:6px}
+.dth{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.dth label{position:relative;display:block;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;background:var(--cream-2)}
+.dth label.x{border-color:var(--brand)}
+.dth img{width:100%;height:100%;object-fit:cover;display:block}
+.dth input{position:absolute;right:5px;top:5px;width:20px;height:20px;accent-color:var(--brand)}
+.dth span{position:absolute;left:0;right:0;bottom:0;font-size:10.5px;font-weight:700;text-align:center;padding:2px;background:rgba(26,8,5,.72);color:#fff}
+.dth label.x span{background:var(--brand)}
+.dth label:not(.x) span{background:var(--ok)}
 .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:14.5px;border:2px dashed var(--line);border-radius:12px}
 
 /* thanh đăng dưới cùng */
@@ -212,6 +232,15 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       <button class="pill" data-c="camera">Camera</button>
       <button class="pill" data-c="smart">Nhà thông minh</button>
     </div>
+    <div class="tb" id="wTools">
+      <button class="ib" data-t="all" type="button">Chọn tất cả</button>
+      <button class="ib" data-t="none" type="button">Bỏ chọn</button>
+      <button class="ib del" data-t="delsel" type="button" disabled>Xóa đã chọn (0)</button>
+      <button class="ib del" data-t="delall" type="button">Xóa toàn bộ</button>
+      <button class="ib" data-t="dup" type="button">Tìm ảnh trùng</button>
+    </div>
+    <div id="wMsg"></div>
+    <div id="dupOut"></div>
     <div class="list" id="wList"></div>
     <p class="hint" style="margin:12px 2px">★ = ảnh đại diện của ngành, hiện ở mục Dịch vụ. Chú thích nên nói chi tiết kỹ thuật — đó là thứ làm khách tin tay nghề.</p>
   </section>
@@ -344,6 +373,7 @@ async function load(){
   data.video=data.video||{title:"Video công trình",intro:"Quay thực tế tại các công trình AIOTI thi công. Bấm vào để xem ngay trên trang.",channel:""};
   base={commit,tree:c.tree.sha,paths,snap:JSON.stringify(data),data:JSON.parse(JSON.stringify(data))};
   D=data; newFiles.forEach(v=>URL.revokeObjectURL(v.url)); newFiles=new Map(); junk=[];
+  sel=new Set(); undo=null; if($("wMsg")){$("wMsg").innerHTML="";$("dupOut").innerHTML="";}
   $("acctInfo").innerHTML=`Kho: <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> · nhánh <b>${esc(cfg.branch)}</b><br>Phiên bản đang sửa: <code>${commit.slice(0,7)}</code>`;
   $("viewSite").href=D.site&&D.site.url?D.site.url:"../";
   buildForms(); renderWorks(); renderVideos(); renderPrices(); updateBar();
@@ -418,6 +448,7 @@ $("wFile").addEventListener("change",e=>{
   D.gallery=added.concat(D.gallery);          // ảnh mới lên đầu
   if(wFilter!=="all"&&wFilter!==wCat){ wFilter="all"; $("wFilter").querySelectorAll(".pill").forEach(p=>p.classList.toggle("on",p.dataset.c==="all")); }
   renderWorks(); updateBar();
+  scanDup(true);      // tự cảnh báo nếu ảnh vừa thêm trùng ảnh đã có
 });
 
 function thumbOf(it,kind){
@@ -428,11 +459,14 @@ function thumbOf(it,kind){
 function renderWorks(){
   const L=$("wList");
   const vis=D.gallery.map((p,i)=>i).filter(i=>wFilter==="all"||D.gallery[i].cat===wFilter);
+  for(const id of [...sel]) if(!D.gallery.some(p=>p.id===id)) sel.delete(id);
+  updTools(vis.length);
   if(!vis.length){L.innerHTML=`<div class="empty">Chưa có ảnh nào${wFilter!=="all"?" trong ngành này":""}.</div>`;return;}
   L.innerHTML=vis.map((i,k)=>{
     const p=D.gallery[i], isNew=newFiles.has(p.id);
-    return `<div class="it${isNew?" new":""}" data-i="${i}">
-      <div class="th"><img src="${esc(thumbOf(p,"anh"))}" alt="" loading="lazy"><span class="no">${String(i+1).padStart(2,"0")}</span></div>
+    return `<div class="it${isNew?" new":""}${sel.has(p.id)?" sel":""}" data-i="${i}">
+      <div class="th"><img src="${esc(thumbOf(p,"anh"))}" alt="" loading="lazy"><span class="no">${String(i+1).padStart(2,"0")}</span>
+        <label class="ck" title="Chọn ảnh"><input type="checkbox" data-sel${sel.has(p.id)?" checked":""}></label></div>
       <div class="flds">
         <select data-f="cat">${Object.entries(CATS).map(([k,v])=>`<option value="${k}"${p.cat===k?" selected":""}>${v}</option>`).join("")}</select>
         <textarea data-f="cap" placeholder="Chú thích kỹ thuật — ví dụ: Đầu ghi 8 kênh, dây đi trong ống có nhãn">${esc(p.cap)}</textarea>
@@ -465,14 +499,138 @@ $("wList").addEventListener("click",e=>{
   if(a==="star"){ const was=!!p.cover; D.gallery.forEach(x=>{ if(x.cat===p.cat) x.cover=false; }); p.cover=!was; if(!p.cover) delete p.cover; }
   if(a==="up"&&k>0){ const j=vis[k-1]; [D.gallery[i],D.gallery[j]]=[D.gallery[j],D.gallery[i]]; }
   if(a==="down"&&k<vis.length-1){ const j=vis[k+1]; [D.gallery[i],D.gallery[j]]=[D.gallery[j],D.gallery[i]]; }
-  if(a==="del"){
-    if(!confirm("Xóa ảnh này khỏi website?")) return;
-    const nf=newFiles.get(p.id); if(nf){URL.revokeObjectURL(nf.url);newFiles.delete(p.id);}
-    D.gallery.splice(i,1);
-  }
+  if(a==="del"){ removeIds([p.id]); return; }
   D.gallery.forEach(x=>{ if(x.cover===false) delete x.cover; });
   renderWorks(); updateBar();
 });
+
+/* ======================= CHỌN & XÓA HÀNG LOẠT ======================= */
+let sel=new Set(), undo=null;
+function visIdx(){ return D.gallery.map((p,i)=>i).filter(i=>wFilter==="all"||D.gallery[i].cat===wFilter); }
+function updTools(nVis){
+  const t=$("wTools"); if(!t) return;
+  const n=sel.size;
+  t.querySelector('[data-t="delsel"]').textContent=`Xóa đã chọn (${n})`;
+  t.querySelector('[data-t="delsel"]').disabled=!n;
+  t.querySelector('[data-t="none"]').disabled=!n;
+  const nv=nVis==null?visIdx().length:nVis;
+  t.querySelector('[data-t="all"]').disabled=!nv;
+  t.querySelector('[data-t="delall"]').disabled=!nv;
+  t.querySelector('[data-t="dup"]').disabled=D.gallery.length<2;
+}
+function removeIds(ids,silent){
+  ids=ids.filter(id=>D.gallery.some(p=>p.id===id));
+  if(!ids.length) return;
+  if(undo) undo.files.forEach(([,v])=>URL.revokeObjectURL(v.url));      // hoàn tác cũ hết hiệu lực
+  const set=new Set(ids);
+  undo={gallery:D.gallery.slice(), files:ids.filter(id=>newFiles.has(id)).map(id=>[id,newFiles.get(id)])};
+  ids.forEach(id=>{ newFiles.delete(id); sel.delete(id); });
+  D.gallery=D.gallery.filter(p=>!set.has(p.id));
+  $("dupOut").innerHTML="";
+  $("wMsg").innerHTML=`<div class="msg warn" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="flex:1">Đã bỏ <b>${ids.length}</b> ảnh khỏi danh sách. Ảnh chỉ bị xóa khỏi web khi bấm <b>Đăng lên web</b>.</span>
+    <button class="ib" id="btnUndo" type="button">Hoàn tác</button></div>`;
+  $("btnUndo").onclick=()=>{
+    if(!undo) return;
+    D.gallery=undo.gallery; undo.files.forEach(([id,v])=>newFiles.set(id,v)); undo=null;
+    $("wMsg").innerHTML='<div class="msg good">Đã khôi phục.</div>';
+    renderWorks(); updateBar();
+  };
+  renderWorks(); updateBar();
+}
+$("wTools").addEventListener("click",e=>{
+  const b=e.target.closest("[data-t]"); if(!b||b.disabled) return;
+  const t=b.dataset.t, vis=visIdx();
+  const scope=wFilter==="all"?"":" trong ngành "+CATS[wFilter];
+  if(t==="all"){ vis.forEach(i=>sel.add(D.gallery[i].id)); renderWorks(); }
+  if(t==="none"){ sel.clear(); renderWorks(); }
+  if(t==="delsel"){ if(confirm(`Xóa ${sel.size} ảnh đã chọn?`)) removeIds([...sel]); }
+  if(t==="delall"){
+    if(confirm(`Xóa TOÀN BỘ ${vis.length} ảnh${scope}?\n\nChưa bấm Đăng lên web thì vẫn Hoàn tác được.`))
+      removeIds(vis.map(i=>D.gallery[i].id));
+  }
+  if(t==="dup") scanDup(false);
+});
+$("wList").addEventListener("change",e=>{
+  if(e.target.dataset.sel===undefined) return;
+  const row=e.target.closest(".it"), id=D.gallery[+row.dataset.i].id;
+  e.target.checked?sel.add(id):sel.delete(id);
+  row.classList.toggle("sel",e.target.checked); updTools();
+});
+
+/* ======================= TÌM ẢNH TRÙNG ======================= */
+/* So "vân tay hình ảnh": thu nhỏ ảnh còn 9×8 điểm xám, ghi lại chiều sáng/tối giữa các điểm cạnh nhau.
+   Cùng một tấm ảnh dù đã nén lại, đổi tên, đổi cỡ vẫn cho vân tay gần như giống hệt. */
+const hashCache=new Map(), DUP_MAX=5;
+function hashOf(src){
+  return new Promise(res=>{
+    const im=new Image(); im.crossOrigin="anonymous";
+    im.onload=()=>{
+      try{
+        const c=document.createElement("canvas"); c.width=9; c.height=8;
+        const x=c.getContext("2d",{willReadFrequently:true}); x.imageSmoothingQuality="high"; x.drawImage(im,0,0,9,8);
+        const d=x.getImageData(0,0,9,8).data, g=[];
+        for(let i=0;i<72;i++) g.push(d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114);
+        let h="";
+        for(let r=0;r<8;r++) for(let k=0;k<8;k++) h+=g[r*9+k]<g[r*9+k+1]?"1":"0";
+        res(h);
+      }catch(_){ res(null); }
+    };
+    im.onerror=()=>res(null);
+    im.src=src;
+  });
+}
+const ham=(a,b)=>{let n=0;for(let i=0;i<64;i++) if(a[i]!==b[i]) n++;return n;};
+async function hashItem(p){
+  const key=p.id+(newFiles.has(p.id)?"@new":"");
+  if(hashCache.has(key)) return hashCache.get(key);
+  const h=await hashOf(thumbOf(p,"anh")); hashCache.set(key,h); return h;
+}
+function keepScore(p,i){ return (String(p.cap||"").trim()?4:0)+(p.cover?2:0)+(newFiles.has(p.id)?0:1)-i/1e4; }
+
+async function scanDup(onlyNew){
+  const out=$("dupOut"), items=D.gallery.slice();
+  if(items.length<2){ if(!onlyNew) out.innerHTML='<div class="msg good">Chưa đủ ảnh để so sánh.</div>'; return; }
+  if(!onlyNew) out.innerHTML=`<div class="msg warn">Đang so sánh ${items.length} ảnh… <span id="dupPg">0</span>/${items.length}</div>`;
+  const hs=[];
+  for(let i=0;i<items.length;i++){ hs.push(await hashItem(items[i])); const pg=$("dupPg"); if(pg) pg.textContent=i+1; }
+  // gom nhóm các ảnh giống nhau
+  const par=items.map((_,i)=>i), f=i=>par[i]===i?i:(par[i]=f(par[i]));
+  for(let i=0;i<items.length;i++) for(let j=i+1;j<items.length;j++)
+    if(hs[i]&&hs[j]&&ham(hs[i],hs[j])<=DUP_MAX) par[f(j)]=f(i);
+  const g={}; items.forEach((_,i)=>{ if(hs[i]){ const r=f(i); (g[r]=g[r]||[]).push(i); } });
+  let groups=Object.values(g).filter(x=>x.length>1);
+  if(onlyNew) groups=groups.filter(x=>x.some(i=>newFiles.has(items[i].id)));
+  const failed=hs.filter(h=>!h).length;
+  if(!groups.length){
+    if(!onlyNew) out.innerHTML=`<div class="msg good">Không thấy ảnh trùng.${failed?` (${failed} ảnh không đọc được để so sánh)`:""}</div>`;
+    return;
+  }
+  const extra=groups.reduce((s,x)=>s+x.length-1,0);
+  out.innerHTML=`<div class="dup"><h3>${onlyNew?"Ảnh vừa thêm có vẻ đã có sẵn":"Tìm thấy ảnh trùng"}</h3>
+    <p class="hint">${groups.length} nhóm ảnh giống nhau. Ảnh <b style="color:var(--ok)">GIỮ</b> được chọn sẵn là ảnh có chú thích / ảnh đại diện. Bấm vào ảnh để đổi lựa chọn.</p>
+    ${groups.map((x,gi)=>{
+      const keep=x.slice().sort((a,b)=>keepScore(items[b],b)-keepScore(items[a],a))[0];
+      return `<div class="dgrp"><p>Nhóm ${gi+1} · ${x.length} ảnh giống nhau</p><div class="dth">
+        ${x.map(i=>{ const p=items[i], del=i!==keep;
+          return `<label class="${del?"x":""}"><img src="${esc(thumbOf(p,"anh"))}" alt=""><input type="checkbox" data-dup="${esc(p.id)}"${del?" checked":""}><span>${del?"XÓA":"GIỮ"} · ${String(i+1).padStart(2,"0")}</span></label>`;}).join("")}
+      </div></div>`;}).join("")}
+    <div class="row" style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-line" id="dupClose" type="button" style="flex:1">Để sau</button>
+      <button class="btn btn-red" id="dupDel" type="button" style="flex:2">Xóa ${extra} ảnh trùng</button>
+    </div></div>`;
+  const cnt=()=>{ const n=out.querySelectorAll("input[data-dup]:checked").length; $("dupDel").textContent=`Xóa ${n} ảnh trùng`; $("dupDel").disabled=!n; };
+  out.querySelectorAll("input[data-dup]").forEach(ip=>ip.addEventListener("change",()=>{
+    const l=ip.closest("label"); l.classList.toggle("x",ip.checked); l.querySelector("span").textContent=(ip.checked?"XÓA":"GIỮ")+l.querySelector("span").textContent.slice(3); cnt();
+  }));
+  $("dupClose").onclick=()=>{ out.innerHTML=""; };
+  $("dupDel").onclick=()=>{
+    const ids=[...out.querySelectorAll("input[data-dup]:checked")].map(x=>x.dataset.dup);
+    const grpAll=groups.some(x=>x.every(i=>ids.includes(items[i].id)));
+    if(grpAll&&!confirm("Có nhóm ảnh đang chọn xóa HẾT, không giữ lại tấm nào. Vẫn xóa?")) return;
+    removeIds(ids);
+  };
+}
 
 /* ======================= VIDEO ======================= */
 let vCat="solar";
@@ -815,7 +973,7 @@ $("btnPublish").addEventListener("click",async()=>{
     del.forEach(p=>newPaths.delete(p)); entries.forEach(e=>{ if(e.sha!==null) newPaths.add(e.path); });
     newFiles.forEach(v=>URL.revokeObjectURL(v.url));
     base={commit:commit.sha,tree:tree.sha,paths:newPaths,snap:JSON.stringify(D),data:JSON.parse(JSON.stringify(D))};
-    newFiles=new Map(); junk=[]; $("scanOut").innerHTML=""; $("vMsg").innerHTML="";
+    newFiles=new Map(); junk=[]; $("scanOut").innerHTML=""; $("vMsg").innerHTML=""; sel=new Set(); undo=null; $("wMsg").innerHTML=""; $("dupOut").innerHTML="";
     renderWorks(); renderVideos(); renderPrices(); updateBar();
     $("acctInfo").innerHTML=`Kho: <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> · nhánh <b>${esc(cfg.branch)}</b><br>Phiên bản đang sửa: <code>${commit.sha.slice(0,7)}</code>`;
     const t=new Date();
