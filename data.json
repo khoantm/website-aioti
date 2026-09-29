@@ -1243,7 +1243,23 @@
    }
   ]
  },
- "videos": [],
+ "videos": [
+  {
+   "id": "EHf5K2h1Fr0",
+   "cat": "camera",
+   "cap": ""
+  },
+  {
+   "id": "QUNsOG0HyUw",
+   "cat": "camera",
+   "cap": ""
+  },
+  {
+   "id": "gvNxrVBWQHE",
+   "cat": "camera",
+   "cap": ""
+  }
+ ],
  "video": {
   "title": "Video công trình",
   "intro": "Quay thực tế tại các công trình AIOTI thi công. Bấm vào để xem ngay trên trang.",
