@@ -83,12 +83,102 @@
  },
  "gallery": [
   {
+   "id": "3n0m6631",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m73q2",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m7oah",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m7j7y",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m7bjh",
+   "cat": "solar",
+   "cap": "",
+   "w": 1400,
+   "h": 788
+  },
+  {
+   "id": "3n0m8bht",
+   "cat": "solar",
+   "cap": "",
+   "w": 1400,
+   "h": 788
+  },
+  {
+   "id": "3n0m811t",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m89jh",
+   "cat": "solar",
+   "cap": "",
+   "w": 1400,
+   "h": 788
+  },
+  {
+   "id": "3n0m8gtx",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m8r6n",
+   "cat": "solar",
+   "cap": "",
+   "w": 1400,
+   "h": 788
+  },
+  {
+   "id": "3n0m981c",
+   "cat": "solar",
+   "cap": "",
+   "w": 1400,
+   "h": 788
+  },
+  {
+   "id": "3n0m922p",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
+   "id": "3n0m90w5",
+   "cat": "solar",
+   "cap": "",
+   "w": 788,
+   "h": 1400
+  },
+  {
    "id": "01",
    "cat": "solar",
    "cap": "Biệt thự — dàn pin lắp trên mái, không phá vỡ kiến trúc mặt tiền",
    "w": 1400,
-   "h": 1050,
-   "cover": true
+   "h": 1050
   },
   {
    "id": "02",
@@ -123,7 +213,8 @@
    "cat": "solar",
    "cap": "Kết cấu thép mạ kẽm nhúng nóng, giằng chéo chống lật khi gió lớn",
    "w": 1400,
-   "h": 1050
+   "h": 1050,
+   "cover": true
   },
   {
    "id": "07",
@@ -186,8 +277,7 @@
    "cat": "camera",
    "cap": "Camera PTZ giám sát dàn pin ban ngày, phát hiện sớm hư hỏng hoặc vật lạ",
    "w": 1400,
-   "h": 788,
-   "cover": true
+   "h": 788
   },
   {
    "id": "16",
