@@ -1,0 +1,237 @@
+{
+ "site": {
+  "url": "https://khoantm.github.io/website-aioti/"
+ },
+ "contact": {
+  "phone": "0978113762",
+  "phoneDisplay": "0978 113 762",
+  "zalo": "0978113762",
+  "email": "aiotigroup@gmail.com",
+  "company": "CÔNG TY TNHH AIOTI",
+  "mst": "0314830058",
+  "address": "Số 26 Đường 29, Phường Bình Trưng\nThành phố Hồ Chí Minh",
+  "mapUrl": "https://www.google.com/maps/place/N%C4%82NG+L%C6%AF%E1%BB%A2NG+M%E1%BA%B6T+TR%E1%BB%9CI+%26+CAMERA+-+AIOTI/@10.7866651,106.7757631,17z/data=!3m1!4b1!4m6!3m5!1s0x317525ec37171301:0x2dbcaa7c020fccd4!8m2!3d10.7866598!4d106.778338!16s%2Fg%2F11fmyj4brh",
+  "mapLat": "10.7866598",
+  "mapLng": "106.778338",
+  "googleNote": "5,0★ · 494 lượt xem trên Google"
+ },
+ "hero": {
+  "eyebrow": "Công ty TNHH AIOTI · MST 0314830058",
+  "title": "Công nghệ · An ninh ·",
+  "titleHi": "Năng lượng",
+  "title2": "Hộ gia đình - Doanh nghiệp - Kho bãi.",
+  "lede": "AIOTI khảo sát, thiết kế và thi công **điện năng lượng mặt trời**, **camera an ninh** và **nhà thông minh** tại TP.HCM. Làm trọn gói từ bản vẽ đến nghiệm thu, bàn giao đầy đủ hồ sơ và quan trọng nhất AIOTI tập trung vào tiêu chí **Chất Lượng sản phẩm, thi công + Dịch Vụ chăm sóc hỗ trợ khách hàng sau bán hàng**."
+ },
+ "stats": {
+  "fromYear": 2017,
+  "devices": "1.000+",
+  "kwp": "100+"
+ },
+ "services": {
+  "title": "Sản phẩm và dịch vụ AIOTI cung cấp",
+  "intro": "Ba nhóm sản phẩm, một đầu mối chịu trách nhiệm. Nhận trọn gói hoặc từng hạng mục — cùng một đội khảo sát, cùng một người theo công trình đến khi bàn giao.",
+  "groups": [
+   {
+    "cat": "solar",
+    "who": "Nhà phố · Biệt thự · Nhà xưởng · Doanh nghiệp",
+    "name": "Điện năng lượng mặt trời",
+    "desc": "Thiết kế và thi công trọn gói hệ áp mái. Công suất tính theo hóa đơn điện thực tế của từng công trình, không bán theo gói có sẵn.",
+    "items": [
+     "**Hệ hòa lưới** — giảm hóa đơn, điện dư bán lại cho EVN",
+     "**Hệ hòa lưới có lưu trữ** — vẫn có điện khi cúp điện",
+     "**Hệ độc lập** cho khu vực chưa có điện lưới",
+     "Tấm pin, inverter, pin lưu trữ lithium",
+     "Khung giá đỡ cho mái tôn, mái bê tông, mái ngói",
+     "Tủ điện, chống sét lan truyền, hộp cách ly DC"
+    ],
+    "img": "01"
+   },
+   {
+    "cat": "camera",
+    "who": "Nhà ở · Cửa hàng · Kho xưởng",
+    "name": "Camera an ninh",
+    "desc": "Hệ giám sát trọn bộ, xem từ xa trên điện thoại, lưu đủ số ngày theo nhu cầu.",
+    "items": [
+     "Camera trong nhà, ngoài trời, camera xoay 360°",
+     "Đầu ghi và ổ cứng tính theo số ngày cần lưu",
+     "Chuông cửa có hình, camera cổng",
+     "Lắp bổ sung vào hệ camera đang có sẵn",
+     "Cài đặt xem từ xa, bàn giao tài khoản quản trị"
+    ],
+    "img": "15"
+   },
+   {
+    "cat": "smart",
+    "who": "Nhà ở · Văn phòng · Nhà xưởng",
+    "name": "Nhà thông minh & kiểm soát ra vào",
+    "desc": "Thiết bị điều khiển và quản lý ra vào, lắp đồng bộ cùng hệ điện và camera.",
+    "items": [
+     "Khóa vân tay, mã số, thẻ từ, khóa cửa kính",
+     "Kiểm soát ra vào — chấm công, phân quyền từng cửa",
+     "Mạng WiFi phủ toàn nhà, đi mạng LAN nội bộ",
+     "Công tắc, rèm, đèn điều khiển qua điện thoại",
+     "Hướng dẫn đến khi gia chủ tự vận hành được"
+    ],
+    "img": "09"
+   }
+  ]
+ },
+ "works": {
+  "title": "Ảnh thật, chụp tại công trình AIOTI đã làm",
+  "intro": "Không phải ảnh minh họa lấy trên mạng. Bấm vào từng ảnh để xem lớn và đọc chi tiết kỹ thuật.",
+  "note": "Cần xem thêm ảnh của một loại công trình cụ thể — nhà phố, biệt thự hay nhà xưởng — gọi hotline, AIOTI gửi ngay qua Zalo."
+ },
+ "gallery": [
+  {
+   "id": "01",
+   "cat": "solar",
+   "cap": "Biệt thự — dàn pin lắp trên mái, không phá vỡ kiến trúc mặt tiền",
+   "w": 1400,
+   "h": 1050,
+   "cover": true
+  },
+  {
+   "id": "02",
+   "cat": "solar",
+   "cap": "Dàn pin hoàn thiện trên mái bê tông, có camera giám sát riêng cho khu vực mái",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "03",
+   "cat": "solar",
+   "cap": "Hai dãy pin bố trí song song, chừa lối đi giữa để vệ sinh và bảo trì",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "04",
+   "cat": "solar",
+   "cap": "Lối đi giữa hai dãy pin và máng thoát nước — thiết kế để mái không đọng nước",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "05",
+   "cat": "solar",
+   "cap": "Khung nâng cao vừa phát điện vừa che nắng cho sân thượng",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "06",
+   "cat": "solar",
+   "cap": "Kết cấu thép mạ kẽm nhúng nóng, giằng chéo chống lật khi gió lớn",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "07",
+   "cat": "solar",
+   "cap": "Khung giá đỡ dựng xong trước khi lắp pin — chân đế xử lý chống thấm tại điểm khoan",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "08",
+   "cat": "solar",
+   "cap": "Nhìn từ đường: dàn pin nằm gọn sau mái đua, khuất tầm nhìn mặt tiền",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "09",
+   "cat": "solar",
+   "cap": "Hệ hybrid có lưu trữ: inverter, tủ điện và ba module pin 16,08 kWh",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "10",
+   "cat": "solar",
+   "cap": "Tủ điện dán nhãn từng aptomat — EVN, BACKUP, LOAD, SPD, CB PV1, CB PV2",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "11",
+   "cat": "solar",
+   "cap": "Pin lưu trữ lithium, đèn báo trạng thái sạc nhìn thấy từ xa",
+   "w": 1400,
+   "h": 1866
+  },
+  {
+   "id": "12",
+   "cat": "solar",
+   "cap": "Inverter lắp ngoài trời, chọn vị trí thoáng gió để tản nhiệt",
+   "w": 1400,
+   "h": 1866
+  },
+  {
+   "id": "13",
+   "cat": "solar",
+   "cap": "Hộp cách ly DC chuẩn IP67 — ngắt được nguồn một chiều từ pin khi cần sửa chữa",
+   "w": 1400,
+   "h": 1866
+  },
+  {
+   "id": "14",
+   "cat": "solar",
+   "cap": "Cẩu pin lưu trữ vào công trình bằng xe cẩu chuyên dụng",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "15",
+   "cat": "camera",
+   "cap": "Camera PTZ giám sát dàn pin ban ngày, phát hiện sớm hư hỏng hoặc vật lạ",
+   "w": 1400,
+   "h": 788,
+   "cover": true
+  },
+  {
+   "id": "16",
+   "cat": "camera",
+   "cap": "Cùng camera đó vào ban đêm — vẫn quan sát rõ toàn bộ khu vực mái",
+   "w": 1400,
+   "h": 788
+  }
+ ],
+ "pricing": {
+  "title": "Bảng giá tham khảo",
+  "intro": "Giá thiết bị và gói lắp đặt phổ biến. Bấm vào ảnh để xem lớn. Giá thực tế theo khảo sát từng công trình.",
+  "note": "Giá có thể thay đổi theo thời điểm và cấu hình. Gọi hotline để được báo giá chính xác."
+ },
+ "prices": [],
+ "why": {
+  "eyebrow": "Vì sao chọn AIOTI",
+  "title": "Báo giá giải pháp, dịch vụ hợp đồng rõ ràng",
+  "intro": "Đây là cam kết bằng văn bản, không phải lời hứa lúc tư vấn.",
+  "items": [
+   {
+    "t": "Báo giá trước",
+    "d": "Báo giá giải pháp + dịch vụ phù hợp từng hạng mục nhu cầu của khách hàng trước khi thi công. Không làm trước tính sau."
+   },
+   {
+    "t": "Không phát sinh ngoài hợp đồng",
+    "d": "Phần phát sinh có bảng giá căn cứ rõ ràng. Mọi thay đổi làm tăng chi phí đều phải có xác nhận của khách bằng văn bản trước khi thực hiện."
+   },
+   {
+    "t": "Hợp đồng và hóa đơn đầy đủ",
+    "d": "AIOTI là Công ty có giấy phép kinh doanh và mã số thuế, xuất hóa đơn giá trị gia tăng cho mọi công trình."
+   },
+   {
+    "t": "Bảo hành có phiếu",
+    "d": "Thời hạn bảo hành thiết bị và thi công dược ghi rõ trong hợp đồng, kèm chính sách bảo hành từ chính hãng sản xuất để khách hàng có đầy đủ thông tin cần thiết."
+   },
+   {
+    "t": "Hoàn trả mặt bằng",
+    "d": "Dọn dẹp mặt bằng sạch sẽ trước khi bàn giao cho khách hàng."
+   },
+   {
+    "t": "Hỗ trợ sau bàn giao",
+    "d": "Đây là tiêu chí cốt lõi của AIOTI vì vậy dịch vụ được duy trì trọn đời sản phẩm. Hết thời gian bảo hành AIOTI vẫn hỗ trợ hướng dẫn vận hành từ xa mà không tốn thêm bất kỳ chi phí dịch vụ hàng tháng, hàng năm nào khác, dù tuổi đời sản phẩm lên tới 15, 20 hay 25 năm đi nữa quý khách vẫn được hỗ trợ hoàn toàn miển phí."
+   }
+  ]
+ }
+}
