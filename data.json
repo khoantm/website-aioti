@@ -227,7 +227,8 @@
    "cat": "smart",
    "cap": "",
    "w": 1400,
-   "h": 767
+   "h": 767,
+   "cover": true
   },
   {
    "id": "cnywm2gc",
