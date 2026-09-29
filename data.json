@@ -13,7 +13,9 @@
   "mapUrl": "https://www.google.com/maps/place/N%C4%82NG+L%C6%AF%E1%BB%A2NG+M%E1%BA%B6T+TR%E1%BB%9CI+%26+CAMERA+-+AIOTI/@10.7866651,106.7757631,17z/data=!3m1!4b1!4m6!3m5!1s0x317525ec37171301:0x2dbcaa7c020fccd4!8m2!3d10.7866598!4d106.778338!16s%2Fg%2F11fmyj4brh",
   "mapLat": "10.7866598",
   "mapLng": "106.778338",
-  "googleNote": "5,0★ · 494 lượt xem trên Google"
+  "googleNote": "5,0★ · 494 lượt xem trên Google",
+  "eyebrow": "Liên hệ",
+  "title": "Gọi AIOTI"
  },
  "hero": {
   "eyebrow": "Công ty TNHH AIOTI · MST 0314830058",
@@ -74,12 +76,14 @@
     ],
     "img": "09"
    }
-  ]
+  ],
+  "eyebrow": "Dịch vụ"
  },
  "works": {
-  "title": "Ảnh thật, chụp tại công trình AIOTI đã làm",
-  "intro": "Không phải ảnh minh họa lấy trên mạng. Bấm vào từng ảnh để xem lớn và đọc chi tiết kỹ thuật.",
-  "note": "Cần xem thêm ảnh của một loại công trình cụ thể — nhà phố, biệt thự hay nhà xưởng — gọi hotline, AIOTI gửi ngay qua Zalo."
+  "title": "Ảnh thật, chụp tại công trình đã làm",
+  "intro": "",
+  "note": "Cần xem thêm ảnh của một loại công trình cụ thể — nhà phố, biệt thự hay nhà xưởng — gọi hotline, AIOTI gửi ngay qua Zalo.",
+  "eyebrow": "Công trình"
  },
  "gallery": [
   {
@@ -1209,7 +1213,8 @@
  "pricing": {
   "title": "Bảng giá tham khảo",
   "intro": "Giá thiết bị và gói lắp đặt phổ biến. Bấm vào ảnh để xem lớn. Giá thực tế theo khảo sát từng công trình.",
-  "note": "Giá có thể thay đổi theo thời điểm và cấu hình. Gọi hotline để được báo giá chính xác."
+  "note": "Giá có thể thay đổi theo thời điểm và cấu hình. Gọi hotline để được báo giá chính xác.",
+  "eyebrow": "Bảng giá"
  },
  "prices": [],
  "why": {
@@ -1261,8 +1266,9 @@
   }
  ],
  "video": {
-  "title": "Video công trình",
+  "title": "Video AIOTI",
   "intro": "Quay thực tế tại các công trình AIOTI thi công. Bấm vào để xem ngay trên trang.",
-  "channel": ""
+  "channel": "",
+  "eyebrow": "Video"
  }
 }
