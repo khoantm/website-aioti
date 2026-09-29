@@ -104,6 +104,32 @@
       </button>`;
     }).join("\n");
 
+    const vids = D.videos || [];
+    const V = D.video || {};
+    const vidTiles = vids.map(v => {
+      const cap = esc(v.cap || CATS[v.cat] || "Video công trình");
+      return `      <button class="vid rv" data-yt="${esc(v.id)}"${v.short ? ' data-short="1"' : ""} aria-label="Xem video: ${cap}">
+        <span class="vid-img"><img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="${cap}" loading="lazy"><span class="vid-play" aria-hidden="true"></span>${v.short ? '<span class="vid-tag">SHORTS</span>' : ""}</span>
+        <span class="vid-cap">${CATS[v.cat] ? `<i>${esc(CATS[v.cat])}</i>` : ""}${cap}</span>
+      </button>`;
+    }).join("\n");
+    const videoSection = vids.length ? `
+<!-- ===== VIDEO ===== -->
+<section class="vids" id="video">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="eyebrow light">Video</p>
+      <h2>${esc(V.title || "Video công trình")}</h2>
+      ${V.intro ? `<p>${rich(V.intro)}</p>` : ""}
+    </div>
+    <div class="vgrid">
+${vidTiles}
+    </div>
+    ${V.channel ? `<p class="vids-more rv">Xem thêm trên <a href="${esc(V.channel)}" target="_blank" rel="noopener">kênh YouTube AIOTI ›</a></p>` : ""}
+  </div>
+</section>
+` : "";
+
     const pricingSection = prices.length ? `
 <!-- ===== BẢNG GIÁ ===== -->
 <section class="pricing" id="banggia">
@@ -160,7 +186,7 @@ ${priceTiles}
     <a class="brand" href="#top"><img class="mark" src="img/logo-trang.png" alt="Logo AIOTI"><span><b>AIOTI</b><i>Công nghệ · An ninh · Năng lượng</i></span></a>
     <a class="lnk" href="#dichvu">Dịch vụ</a>
     <a class="lnk" href="#congtrinh">Công trình</a>
-${prices.length ? `    <a class="lnk" href="#banggia">Bảng giá</a>\n` : ""}    <a class="lnk" href="#visao">Vì sao chọn AIOTI</a>
+${vids.length ? `    <a class="lnk" href="#video">Video</a>\n` : ""}${prices.length ? `    <a class="lnk" href="#banggia">Bảng giá</a>\n` : ""}    <a class="lnk" href="#visao">Vì sao chọn AIOTI</a>
     <a class="lnk" href="#lienhe">Liên hệ</a>
     <a class="btn btn-sun call" href="${tel}"><span>${esc(C.phoneDisplay)}</span></a>
     <button class="burger" id="burger" aria-label="Mở menu">☰</button>
@@ -231,7 +257,7 @@ ${tiles}
     ${D.works.note ? `<p class="works-note rv">${rich(D.works.note)}</p>` : ""}
   </div>
 </section>
-${pricingSection}
+${videoSection}${pricingSection}
 <div class="mark-div" aria-hidden="true">
   <span></span><img src="img/daibang-do.png" alt=""><span></span>
 </div>
@@ -292,6 +318,11 @@ ${vows}
   </figure>
 </div>
 
+<div class="vb" id="vb" role="dialog" aria-modal="true" aria-label="Xem video">
+  <button class="lb-x" id="vbX" aria-label="Đóng">&times;</button>
+  <div class="vb-box" id="vbBox"></div>
+</div>
+
 <footer>
   <div class="wrap">
     <div class="ft">
@@ -303,7 +334,7 @@ ${vows}
         <h4>Dịch vụ</h4>
 ${groups.map(g => `        <a href="#dichvu">${esc(g.name)}</a>`).join("\n")}
         <a href="#congtrinh">Công trình đã làm</a>
-${prices.length ? `        <a href="#banggia">Bảng giá</a>\n` : ""}      </div>
+${vids.length ? `        <a href="#video">Video công trình</a>\n` : ""}${prices.length ? `        <a href="#banggia">Bảng giá</a>\n` : ""}      </div>
       <div>
         <h4>Liên hệ</h4>
         <a href="${tel}">${esc(C.phoneDisplay)}</a>

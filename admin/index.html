@@ -88,6 +88,8 @@ details.grp>div{padding:0 16px 14px}
 .it .th{position:relative;width:96px;height:96px;border-radius:8px;overflow:hidden;background:var(--cream-2)}
 .it .th img{width:100%;height:100%;object-fit:cover;display:block}
 .it .th.tall{height:120px}
+.it .th.vid{height:72px;width:96px}
+.it .th .yt{position:absolute;right:4px;bottom:4px;background:#c00;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:4px}
 .it .no{position:absolute;left:5px;top:5px;background:rgba(26,8,5,.72);color:#fff;font-family:'IBM Plex Mono';
   font-size:11px;padding:1px 6px;border-radius:6px}
 .it .flds{display:grid;gap:7px;min-width:0}
@@ -152,6 +154,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
     </div>
     <nav class="tabs hide" id="tabs">
       <button class="tab on" data-t="works">Công trình<i id="cWorks">0</i></button>
+      <button class="tab" data-t="videos">Video<i id="cVideos">0</i></button>
       <button class="tab" data-t="prices">Bảng giá<i id="cPrices">0</i></button>
       <button class="tab" data-t="content">Nội dung</button>
       <button class="tab" data-t="contact">Liên hệ</button>
@@ -213,6 +216,29 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
     <p class="hint" style="margin:12px 2px">★ = ảnh đại diện của ngành, hiện ở mục Dịch vụ. Chú thích nên nói chi tiết kỹ thuật — đó là thứ làm khách tin tay nghề.</p>
   </section>
 
+  <!-- VIDEO -->
+  <section id="vVideos" class="hide">
+    <div class="card">
+      <h2>Thêm video YouTube</h2>
+      <p class="sub">Đăng video lên kênh YouTube của AIOTI trước, rồi bấm <b>Chia sẻ → Sao chép đường liên kết</b> và dán vào đây. Nhận cả video thường và Shorts. Chưa có video nào thì mục Video tự ẩn khỏi web.</p>
+      <div class="pills" id="vCat">
+        <button class="pill on" data-c="solar">Điện mặt trời</button>
+        <button class="pill" data-c="camera">Camera an ninh</button>
+        <button class="pill" data-c="smart">Nhà thông minh</button>
+      </div>
+      <div class="fld"><label for="vUrl">Link YouTube</label>
+        <input id="vUrl" inputmode="url" autocomplete="off" placeholder="https://youtu.be/... hoặc https://youtube.com/shorts/..."></div>
+      <button class="btn btn-sun btn-w" id="vAdd" type="button">＋ Thêm video vào <span id="vCatName">Điện mặt trời</span></button>
+      <div id="vMsg"></div>
+    </div>
+    <div class="list" id="vList"></div>
+    <details class="grp"><summary>Chữ tiêu đề mục Video</summary><div>
+      <div class="fld"><label>Tiêu đề</label><input data-b="video.title"></div>
+      <div class="fld"><label>Giới thiệu</label><textarea data-b="video.intro"></textarea></div>
+      <div class="fld"><label>Link kênh YouTube AIOTI</label><input data-b="video.channel" inputmode="url" placeholder="https://www.youtube.com/@..."><p class="hint">Có link thì cuối mục hiện dòng "Xem thêm trên kênh YouTube AIOTI". Để trống thì ẩn.</p></div>
+    </div></details>
+  </section>
+
   <!-- BẢNG GIÁ -->
   <section id="vPrices" class="hide">
     <div class="card">
@@ -261,7 +287,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   </div>
 </div>
 
-<script src="render.js"></script>
+<script src="render.js?v=3"></script>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
@@ -314,23 +340,25 @@ async function load(){
   const data=JSON.parse(b64ToText(blob.content));
   data.gallery=data.gallery||[]; data.prices=data.prices||[];
   data.pricing=data.pricing||{title:"Bảng giá tham khảo",intro:"",note:""};
+  data.videos=data.videos||[];
+  data.video=data.video||{title:"Video công trình",intro:"Quay thực tế tại các công trình AIOTI thi công. Bấm vào để xem ngay trên trang.",channel:""};
   base={commit,tree:c.tree.sha,paths,snap:JSON.stringify(data),data:JSON.parse(JSON.stringify(data))};
   D=data; newFiles.forEach(v=>URL.revokeObjectURL(v.url)); newFiles=new Map(); junk=[];
   $("acctInfo").innerHTML=`Kho: <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> · nhánh <b>${esc(cfg.branch)}</b><br>Phiên bản đang sửa: <code>${commit.slice(0,7)}</code>`;
   $("viewSite").href=D.site&&D.site.url?D.site.url:"../";
-  buildForms(); renderWorks(); renderPrices(); updateBar();
+  buildForms(); renderWorks(); renderVideos(); renderPrices(); updateBar();
   $("tabs").classList.remove("hide"); $("bar").classList.remove("hide");
   switchTab(curTab||"works");
 }
 
 /* ======================= GIAO DIỆN CHUNG ======================= */
-const VIEWS=["vLogin","vLoad","vWorks","vPrices","vContent","vContact"];
+const VIEWS=["vLogin","vLoad","vWorks","vVideos","vPrices","vContent","vContact"];
 function show(v){VIEWS.forEach(x=>$(x).classList.toggle("hide",x!==v));}
 let curTab="works";
 function switchTab(t){
   curTab=t;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
-  show({works:"vWorks",prices:"vPrices",content:"vContent",contact:"vContact"}[t]);
+  show({works:"vWorks",videos:"vVideos",prices:"vPrices",content:"vContent",contact:"vContact"}[t]);
   window.scrollTo(0,0);
 }
 $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab"); if(b) switchTab(b.dataset.t);});
@@ -344,13 +372,15 @@ function dirtyCount(){
 }
 function updateBar(){
   if(!D) return;
-  $("cWorks").textContent=D.gallery.length; $("cPrices").textContent=D.prices.length;
+  $("cWorks").textContent=D.gallery.length; $("cPrices").textContent=D.prices.length; $("cVideos").textContent=D.videos.length;
   const changed=JSON.stringify(D)!==base.snap||newFiles.size||junk.length;
   const nNew=[...newFiles.values()];
   const parts=[];
   const nw=nNew.filter(f=>f.kind==="anh").length, np=nNew.filter(f=>f.kind==="gia").length;
   if(nw) parts.push(`${nw} ảnh công trình mới`);
   if(np) parts.push(`${np} ảnh bảng giá mới`);
+  const bv=new Set((base.data.videos||[]).map(v=>v.id)); const nv=D.videos.filter(v=>!bv.has(v.id)).length;
+  if(nv) parts.push(`${nv} video mới`);
   if(junk.length) parts.push(`xóa ${junk.length} file rác`);
   $("barSt").innerHTML=changed?`<b>Có thay đổi chưa đăng</b>${parts.length?"<br>"+parts.join(" · "):""}`:"Không có thay đổi";
   $("btnPublish").disabled=!changed;
@@ -442,6 +472,70 @@ $("wList").addEventListener("click",e=>{
   }
   D.gallery.forEach(x=>{ if(x.cover===false) delete x.cover; });
   renderWorks(); updateBar();
+});
+
+/* ======================= VIDEO ======================= */
+let vCat="solar";
+function parseYT(u){
+  u=String(u||"").trim(); if(!u) return null;
+  if(/^[A-Za-z0-9_-]{11}$/.test(u)) return {id:u,short:false};
+  let m=u.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/i); if(m) return {id:m[1],short:true};
+  m=u.match(/youtu\.be\/([A-Za-z0-9_-]{11})/i)||u.match(/[?&]v=([A-Za-z0-9_-]{11})/)||u.match(/youtube(?:-nocookie)?\.com\/(?:embed|live|v)\/([A-Za-z0-9_-]{11})/i);
+  return m?{id:m[1],short:false}:null;
+}
+$("vCat").addEventListener("click",e=>{
+  const b=e.target.closest(".pill"); if(!b) return;
+  vCat=b.dataset.c;
+  $("vCat").querySelectorAll(".pill").forEach(p=>p.classList.toggle("on",p===b));
+  $("vCatName").textContent=CATS[vCat];
+});
+function addVideo(){
+  const r=parseYT($("vUrl").value), msg=$("vMsg");
+  if(!r){ msg.innerHTML='<div class="msg bad">Link chưa đúng. Trên YouTube bấm <b>Chia sẻ → Sao chép đường liên kết</b> rồi dán lại.</div>'; return; }
+  if(D.videos.some(v=>v.id===r.id)){ msg.innerHTML='<div class="msg warn">Video này đã có trong danh sách.</div>'; return; }
+  D.videos.unshift({id:r.id,cat:vCat,cap:"",short:r.short||undefined});
+  $("vUrl").value="";
+  msg.innerHTML='<div class="msg good">Đã thêm'+(r.short?" (Shorts)":"")+'. Viết chú thích bên dưới rồi bấm <b>Đăng lên web</b>.</div>';
+  renderVideos(); updateBar();
+}
+$("vAdd").addEventListener("click",addVideo);
+$("vUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); addVideo(); } });
+function renderVideos(){
+  const L=$("vList");
+  if(!D.videos.length){ L.innerHTML='<div class="empty">Chưa có video nào — mục Video đang ẩn trên web.</div>'; return; }
+  const bv=new Set((base.data.videos||[]).map(v=>v.id));
+  L.innerHTML=D.videos.map((v,i)=>{
+    const isNew=!bv.has(v.id);
+    return `<div class="it${isNew?" new":""}" data-i="${i}">
+      <div class="th vid"><img src="https://i.ytimg.com/vi/${esc(v.id)}/mqdefault.jpg" alt="" loading="lazy"><span class="no">${String(i+1).padStart(2,"0")}</span><span class="yt">${v.short?"SHORTS":"▶"}</span></div>
+      <div class="flds">
+        <select data-f="cat">${Object.entries(CATS).map(([k,n])=>`<option value="${k}"${v.cat===k?" selected":""}>${n}</option>`).join("")}</select>
+        <textarea data-f="cap" placeholder="Chú thích — ví dụ: Lắp 24 tấm pin trên mái tôn nhà xưởng Bình Dương">${esc(v.cap)}</textarea>
+      </div>
+      <div class="acts">
+        <button class="ib" data-a="up" ${i===0?"disabled":""}>↑</button>
+        <button class="ib" data-a="down" ${i===D.videos.length-1?"disabled":""}>↓</button>
+        <a class="ib" style="display:inline-flex;align-items:center;text-decoration:none" href="https://youtu.be/${esc(v.id)}" target="_blank" rel="noopener">Xem ↗</a>
+        ${isNew?'<span class="tag new">MỚI</span>':""}
+        <button class="ib del" data-a="del">Xóa</button>
+      </div></div>`;
+  }).join("");
+}
+$("vList").addEventListener("input",e=>{
+  const row=e.target.closest(".it"); if(!row||e.target.dataset.f!=="cap") return;
+  D.videos[+row.dataset.i].cap=e.target.value; updateBar();
+});
+$("vList").addEventListener("change",e=>{
+  const row=e.target.closest(".it"); if(!row||e.target.dataset.f!=="cat") return;
+  D.videos[+row.dataset.i].cat=e.target.value; updateBar();
+});
+$("vList").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-a]"); if(!b) return;
+  const i=+b.closest(".it").dataset.i, V=D.videos, act=b.dataset.a;
+  if(act==="up"&&i>0)[V[i-1],V[i]]=[V[i],V[i-1]];
+  if(act==="down"&&i<V.length-1)[V[i+1],V[i]]=[V[i],V[i+1]];
+  if(act==="del"){ if(!confirm("Xóa video này khỏi web? (Video trên YouTube không bị ảnh hưởng)")) return; V.splice(i,1); }
+  renderVideos(); updateBar();
 });
 
 /* ======================= BẢNG GIÁ ======================= */
@@ -564,7 +658,7 @@ function buildForms(){
     <div class="g2">${F("Vĩ độ","contact.mapLat")}${F("Kinh độ","contact.mapLng")}</div>
   </div></details>`;
   // gán giá trị cho ô chữ Bảng giá (nằm ngoài cForms)
-  document.querySelectorAll('#vPrices [data-b]').forEach(el=>{el.value=getP(D,el.dataset.b)||"";});
+  document.querySelectorAll('#vPrices [data-b],#vVideos [data-b]').forEach(el=>{el.value=getP(D,el.dataset.b)||"";});
 }
 function whyItems(){
   return D.why.items.map((v,i)=>`<div class="sep"></div>
@@ -708,6 +802,8 @@ $("btnPublish").addEventListener("click",async()=>{
     const a=nw.filter(f=>f.kind==="anh").length, g=nw.filter(f=>f.kind==="gia").length;
     if(a) sum.push(`+${a} ảnh công trình`); if(g) sum.push(`+${g} bảng giá`);
     const rmA=[...del].filter(p=>p.startsWith("anh/ct-")).length; if(rmA) sum.push(`-${rmA} ảnh`);
+    const bvv=new Set((base.data.videos||[]).map(v=>v.id)); const nvv=D.videos.filter(v=>!bvv.has(v.id)).length;
+    if(nvv) sum.push(`+${nvv} video`);
     if(junk.length) sum.push(`dọn ${junk.length} file rác`);
     if(JSON.stringify(D)!==base.snap&&!sum.length) sum.push("sửa nội dung");
     const commit=await gh("/git/commits",{method:"POST",body:{message:"Cập nhật website: "+(sum.join(", ")||"sửa nội dung"),tree:tree.sha,parents:[base.commit]}});
@@ -719,8 +815,8 @@ $("btnPublish").addEventListener("click",async()=>{
     del.forEach(p=>newPaths.delete(p)); entries.forEach(e=>{ if(e.sha!==null) newPaths.add(e.path); });
     newFiles.forEach(v=>URL.revokeObjectURL(v.url));
     base={commit:commit.sha,tree:tree.sha,paths:newPaths,snap:JSON.stringify(D),data:JSON.parse(JSON.stringify(D))};
-    newFiles=new Map(); junk=[]; $("scanOut").innerHTML="";
-    renderWorks(); renderPrices(); updateBar();
+    newFiles=new Map(); junk=[]; $("scanOut").innerHTML=""; $("vMsg").innerHTML="";
+    renderWorks(); renderVideos(); renderPrices(); updateBar();
     $("acctInfo").innerHTML=`Kho: <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> · nhánh <b>${esc(cfg.branch)}</b><br>Phiên bản đang sửa: <code>${commit.sha.slice(0,7)}</code>`;
     const t=new Date();
     ov.querySelector(".dlg").innerHTML=`<h3>Đã đăng xong</h3>

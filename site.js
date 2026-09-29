@@ -61,6 +61,22 @@
     if (Math.abs(dx) > 50) show(pos + (dx < 0 ? 1 : -1));
   });
 
+  /* ---- phát video YouTube ngay trên trang ---- */
+  const vb = $("vb"), vbBox = $("vbBox");
+  function vOpen(id, short) {
+    vbBox.classList.toggle("short", !!short);
+    vbBox.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
+      '?autoplay=1&rel=0&playsinline=1" title="Video công trình AIOTI" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    vb.classList.add("on"); document.body.style.overflow = "hidden";
+  }
+  function vClose() { vb.classList.remove("on"); vbBox.innerHTML = ""; document.body.style.overflow = ""; }
+  if (vb) {
+    document.querySelectorAll(".vid").forEach(b => b.addEventListener("click", () => vOpen(b.dataset.yt, b.dataset.short === "1")));
+    $("vbX").addEventListener("click", vClose);
+    vb.addEventListener("click", e => { if (e.target === vb) vClose(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && vb.classList.contains("on")) vClose(); });
+  }
+
   /* ---- lọc Công trình theo ngành: chỉ hiện khi từ 2 ngành trở lên có ≥ 3 ảnh ---- */
   (function () {
     const NAME = { solar: "Điện mặt trời", camera: "Camera an ninh", smart: "Nhà thông minh" };
