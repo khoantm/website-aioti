@@ -37,7 +37,7 @@
     "name": "Điện năng lượng mặt trời",
     "desc": "Thiết kế và thi công trọn gói hệ áp mái. Công suất tính theo hóa đơn điện thực tế của từng công trình, không bán theo gói có sẵn.",
     "items": [
-     "**Hệ hòa lưới** — giảm hóa đơn, điện dư bán lại cho EVN",
+     "**Hệ hòa lưới** — giảm hóa đơn điện.",
      "**Hệ hòa lưới có lưu trữ** — vẫn có điện khi cúp điện",
      "**Hệ độc lập** cho khu vực chưa có điện lưới",
      "Tấm pin, inverter, pin lưu trữ lithium",
