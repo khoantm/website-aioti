@@ -62,6 +62,8 @@ details.grp>summary::-webkit-details-marker{display:none}
 details.grp>summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .15s}
 details.grp[open]>summary::after{transform:rotate(180deg)}
 details.grp>div{padding:0 16px 14px}
+details.ttl{margin-top:14px;border-color:var(--sun);background:#FFFBF0}
+details.ttl>summary{color:var(--brand)}
 .sep{border-top:1px dashed var(--line);margin:14px 0 12px}
 .sep-t{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin:6px 0 10px}
 
@@ -215,6 +217,12 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
 
   <!-- CÔNG TRÌNH -->
   <section id="vWorks" class="hide">
+    <details class="grp ttl"><summary>✎ Sửa tiêu đề mục Công trình</summary><div>
+      <div class="fld"><label>Dòng chữ nhỏ phía trên</label><input data-b="works.eyebrow"></div>
+      <div class="fld"><label>Tiêu đề lớn</label><input data-b="works.title"></div>
+      <div class="fld"><label>Đoạn giới thiệu</label><textarea data-b="works.intro"></textarea></div>
+      <div class="fld"><label>Ghi chú cuối mục</label><textarea data-b="works.note"></textarea></div>
+    </div></details>
     <div class="card">
       <h2>Thêm ảnh công trình</h2>
       <p class="sub">Chọn ngành trước, rồi bấm nút để chụp hoặc chọn ảnh. Ảnh tự nén, không lo nặng.</p>
@@ -247,6 +255,12 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
 
   <!-- VIDEO -->
   <section id="vVideos" class="hide">
+    <details class="grp ttl"><summary>✎ Sửa tiêu đề mục Video</summary><div>
+      <div class="fld"><label>Dòng chữ nhỏ phía trên</label><input data-b="video.eyebrow"></div>
+      <div class="fld"><label>Tiêu đề lớn</label><input data-b="video.title"></div>
+      <div class="fld"><label>Đoạn giới thiệu</label><textarea data-b="video.intro"></textarea></div>
+      <div class="fld"><label>Link kênh YouTube AIOTI</label><input data-b="video.channel" inputmode="url" placeholder="https://www.youtube.com/@..."><p class="hint">Có link thì cuối mục hiện dòng "Xem thêm trên kênh YouTube AIOTI". Để trống thì ẩn.</p></div>
+    </div></details>
     <div class="card">
       <h2>Thêm video YouTube</h2>
       <p class="sub">Đăng video lên kênh YouTube của AIOTI trước, rồi bấm <b>Chia sẻ → Sao chép đường liên kết</b> và dán vào đây. Nhận cả video thường và Shorts. Chưa có video nào thì mục Video tự ẩn khỏi web.</p>
@@ -261,15 +275,16 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       <div id="vMsg"></div>
     </div>
     <div class="list" id="vList"></div>
-    <details class="grp"><summary>Chữ tiêu đề mục Video</summary><div>
-      <div class="fld"><label>Tiêu đề</label><input data-b="video.title"></div>
-      <div class="fld"><label>Giới thiệu</label><textarea data-b="video.intro"></textarea></div>
-      <div class="fld"><label>Link kênh YouTube AIOTI</label><input data-b="video.channel" inputmode="url" placeholder="https://www.youtube.com/@..."><p class="hint">Có link thì cuối mục hiện dòng "Xem thêm trên kênh YouTube AIOTI". Để trống thì ẩn.</p></div>
-    </div></details>
   </section>
 
   <!-- BẢNG GIÁ -->
   <section id="vPrices" class="hide">
+    <details class="grp ttl"><summary>✎ Sửa tiêu đề mục Bảng giá</summary><div>
+      <div class="fld"><label>Dòng chữ nhỏ phía trên</label><input data-b="pricing.eyebrow"></div>
+      <div class="fld"><label>Tiêu đề lớn</label><input data-b="pricing.title"></div>
+      <div class="fld"><label>Đoạn giới thiệu</label><textarea data-b="pricing.intro"></textarea></div>
+      <div class="fld"><label>Ghi chú cuối mục</label><textarea data-b="pricing.note"></textarea></div>
+    </div></details>
     <div class="card">
       <h2>Ảnh bảng giá</h2>
       <p class="sub">Tải ảnh bảng giá, catalogue, giá sản phẩm. Ảnh giữ độ nét cao để khách phóng to đọc được. Chưa có ảnh nào thì mục Bảng giá tự ẩn khỏi web.</p>
@@ -277,11 +292,6 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
         <input type="file" id="pFile" accept="image/*" multiple></label>
     </div>
     <div class="list" id="pList"></div>
-    <details class="grp"><summary>Chữ tiêu đề mục Bảng giá</summary><div>
-      <div class="fld"><label>Tiêu đề</label><input data-b="pricing.title"></div>
-      <div class="fld"><label>Giới thiệu</label><textarea data-b="pricing.intro"></textarea></div>
-      <div class="fld"><label>Ghi chú cuối mục</label><textarea data-b="pricing.note"></textarea></div>
-    </div></details>
   </section>
 
   <!-- NỘI DUNG -->
@@ -316,7 +326,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   </div>
 </div>
 
-<script src="render.js?v=3"></script>
+<script src="render.js?v=4"></script>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
@@ -370,6 +380,11 @@ async function load(){
   data.gallery=data.gallery||[]; data.prices=data.prices||[];
   data.pricing=data.pricing||{title:"Bảng giá tham khảo",intro:"",note:""};
   data.videos=data.videos||[];
+  const dft=(o,k,v)=>{ if(o&&(o[k]==null||o[k]==="")) o[k]=v; };
+  data.video=data.video||{};
+  dft(data.works,"eyebrow","Công trình"); dft(data.services,"eyebrow","Dịch vụ");
+  dft(data.video,"eyebrow","Video"); dft(data.video,"title","Video công trình");
+  dft(data.pricing,"eyebrow","Bảng giá"); dft(data.contact,"eyebrow","Liên hệ"); dft(data.contact,"title","Gọi AIOTI");
   data.video=data.video||{title:"Video công trình",intro:"Quay thực tế tại các công trình AIOTI thi công. Bấm vào để xem ngay trên trang.",channel:""};
   base={commit,tree:c.tree.sha,paths,snap:JSON.stringify(data),data:JSON.parse(JSON.stringify(data))};
   D=data; newFiles.forEach(v=>URL.revokeObjectURL(v.url)); newFiles=new Map(); junk=[];
@@ -780,6 +795,7 @@ function buildForms(){
     <div class="g2">${F("Thiết bị an ninh đã lắp","stats.devices")}${F("Điện mặt trời (kWp)","stats.kwp")}</div>
   </div></details>
   <details class="grp"><summary>Dịch vụ</summary><div>
+    ${F("Dòng chữ nhỏ phía trên","services.eyebrow")}
     ${F("Tiêu đề mục","services.title")}
     ${F("Giới thiệu","services.intro","area")}
     ${g.map((x,i)=>`<div class="sep"></div><p class="sep-t">Nhóm ${String(i+1).padStart(2,"0")} · ${CATS[x.cat]||""}</p>
@@ -787,11 +803,6 @@ function buildForms(){
       ${F("Dành cho","services.groups."+i+".who")}
       ${F("Mô tả ngắn","services.groups."+i+".desc","area")}
       ${F("Danh sách sản phẩm","services.groups."+i+".items","lines")}`).join("")}
-  </div></details>
-  <details class="grp"><summary>Chữ mục Công trình</summary><div>
-    ${F("Tiêu đề","works.title")}
-    ${F("Giới thiệu","works.intro","area")}
-    ${F("Ghi chú cuối mục","works.note","area")}
   </div></details>
   <details class="grp"><summary>Vì sao chọn AIOTI — cam kết</summary><div>
     ${F("Dòng nhỏ","why.eyebrow")}
@@ -801,6 +812,10 @@ function buildForms(){
     <button class="btn btn-line btn-w" id="whyAdd" type="button">＋ Thêm cam kết</button>
   </div></details>`;
   $("ctForms").innerHTML=`
+  <details class="grp ttl"><summary>✎ Sửa tiêu đề mục Liên hệ</summary><div>
+    ${F("Dòng chữ nhỏ phía trên","contact.eyebrow")}
+    ${F("Tiêu đề lớn","contact.title")}
+  </div></details>
   <details class="grp" open><summary>Điện thoại · Zalo · Email</summary><div>
     <div class="g2">${F("Số gọi (viết liền)","contact.phone")}${F("Số hiển thị","contact.phoneDisplay")}</div>
     <div class="g2">${F("Số Zalo","contact.zalo")}${F("Email","contact.email")}</div>
@@ -816,7 +831,7 @@ function buildForms(){
     <div class="g2">${F("Vĩ độ","contact.mapLat")}${F("Kinh độ","contact.mapLng")}</div>
   </div></details>`;
   // gán giá trị cho ô chữ Bảng giá (nằm ngoài cForms)
-  document.querySelectorAll('#vPrices [data-b],#vVideos [data-b]').forEach(el=>{el.value=getP(D,el.dataset.b)||"";});
+  document.querySelectorAll('#vWorks [data-b],#vPrices [data-b],#vVideos [data-b]').forEach(el=>{el.value=getP(D,el.dataset.b)||"";});
 }
 function whyItems(){
   return D.why.items.map((v,i)=>`<div class="sep"></div>
