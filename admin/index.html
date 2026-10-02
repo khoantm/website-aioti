@@ -125,6 +125,14 @@ details.ttl>summary{color:var(--brand)}
 .dth span{position:absolute;left:0;right:0;bottom:0;font-size:10.5px;font-weight:700;text-align:center;padding:2px;background:rgba(26,8,5,.72);color:#fff}
 .dth label.x span{background:var(--brand)}
 .dth label:not(.x) span{background:var(--ok)}
+.dropov{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;padding:20px;
+  background:rgba(163,16,0,.14);backdrop-filter:blur(2px);pointer-events:none}
+.dropov.on{display:flex}
+.dropov div{border:4px dashed var(--brand);border-radius:18px;background:rgba(255,255,255,.96);padding:34px 30px;
+  text-align:center;max-width:460px;width:100%;box-shadow:0 20px 50px rgba(36,19,16,.25)}
+.dropov b{display:block;font-family:'Be Vietnam Pro';font-size:21px;color:var(--brand);margin-bottom:6px}
+.dropov span{font-size:14.5px;color:var(--muted)}
+.dhint{display:block;text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
 .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:14.5px;border:2px dashed var(--line);border-radius:12px}
 
 /* thanh đăng dưới cùng */
@@ -233,6 +241,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       </div>
       <label class="btn btn-sun btn-w addbtn">＋ Thêm ảnh vào <span id="wCatName">Điện mặt trời</span>
         <input type="file" id="wFile" accept="image/*" multiple></label>
+      <span class="dhint">Trên máy tính: kéo ảnh hoặc cả thư mục ảnh thả vào trang · dán ảnh bằng Ctrl+V</span>
     </div>
     <div class="pills" id="wFilter">
       <button class="pill on" data-c="all">Tất cả</button>
@@ -290,6 +299,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       <p class="sub">Tải ảnh bảng giá, catalogue, giá sản phẩm. Ảnh giữ độ nét cao để khách phóng to đọc được. Chưa có ảnh nào thì mục Bảng giá tự ẩn khỏi web.</p>
       <label class="btn btn-sun btn-w addbtn">＋ Thêm ảnh bảng giá
         <input type="file" id="pFile" accept="image/*" multiple></label>
+      <span class="dhint">Trên máy tính: kéo ảnh thả vào trang · dán ảnh bằng Ctrl+V</span>
     </div>
     <div class="list" id="pList"></div>
   </section>
@@ -316,6 +326,9 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   </section>
 
 </main>
+
+<!-- LỚP PHỦ KÉO-THẢ -->
+<div class="dropov" id="dropOv"><div><b id="dropT">Thả ảnh vào đây</b><span id="dropS"></span></div></div>
 
 <!-- THANH ĐĂNG -->
 <div class="bar hide" id="bar">
@@ -455,16 +468,61 @@ $("wFilter").addEventListener("click",e=>{
   $("wFilter").querySelectorAll(".pill").forEach(p=>p.classList.toggle("on",p===b));
   renderWorks();
 });
-$("wFile").addEventListener("change",e=>{
-  const fs=[...e.target.files].filter(f=>f.type.startsWith("image/")||/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name));
-  e.target.value="";
-  if(!fs.length) return;
+const isImg=f=>f&&(String(f.type).startsWith("image/")||/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name||""));
+/* ---- Ảnh HEIC (iPhone): trình duyệt đọc được thì giữ nguyên, không đọc được thì tự chuyển sang JPG ---- */
+const isHeic=f=>/image\/hei[cf]/i.test(f.type||"")||/\.hei[cf]$/i.test(f.name||"");
+let heicLib=null;
+function loadHeicLib(){
+  if(window.heic2any) return Promise.resolve(window.heic2any);
+  if(!heicLib) heicLib=new Promise((res,rej)=>{
+    const s=document.createElement("script"); s.src="heic2any.min.js?v=1";
+    s.onload=()=>window.heic2any?res(window.heic2any):rej(new Error("thư viện HEIC lỗi"));
+    s.onerror=()=>{ heicLib=null; rej(new Error("không tải được thư viện HEIC")); };
+    document.head.appendChild(s);
+  });
+  return heicLib;
+}
+async function browserReads(f){
+  if(!window.createImageBitmap) return false;
+  try{ const b=await createImageBitmap(f); if(b.close) b.close(); return true; }catch(_){ return false; }
+}
+async function normalizeFiles(list,say){
+  const out=[], failed=[];
+  const heic=list.filter(isHeic);
+  let k=0;
+  for(const f of list){
+    if(!isHeic(f)||await browserReads(f)){ out.push(f); continue; }
+    k++; if(say) say(`Đang chuyển ảnh HEIC sang JPG ${k}/${heic.length}… (lần đầu chờ tải công cụ chuyển đổi)`);
+    try{
+      const conv=await loadHeicLib();
+      let b=await conv({blob:f,toType:"image/jpeg",quality:.92});
+      if(Array.isArray(b)) b=b[0];
+      out.push(new File([b],(f.name||"anh").replace(/\.hei[cf]$/i,"")+".jpg",{type:"image/jpeg"}));
+    }catch(e){ console.error(e); failed.push(f.name||"ảnh"); }
+  }
+  return {files:out,failed};
+}
+let heicNote="";      // ghi chú ảnh HEIC không chuyển được ở lần thêm gần nhất
+function heicFailMsg(failed){
+  return failed.length?` Không chuyển được ${failed.length} ảnh HEIC (${failed.slice(0,3).map(esc).join(", ")}${failed.length>3?"…":""}) — mở ảnh trên máy, lưu lại dạng JPG rồi thêm lại.`:"";
+}
+$("wFile").addEventListener("change",e=>{ const fs=[...e.target.files]; e.target.value=""; addWorkFiles(fs); });
+async function addWorkFiles(list){
+  let fs=list.filter(isImg);
+  if(!fs.length) return 0;
+  const say=t=>{ $("wMsg").innerHTML=`<div class="msg warn">${esc(t)}</div>`; };
+  const r=await normalizeFiles(fs, fs.some(isHeic)?say:null);
+  fs=r.files; heicNote=heicFailMsg(r.failed);
+  if(r.failed.length) $("wMsg").innerHTML=`<div class="msg bad">${heicFailMsg(r.failed).trim()}</div>`;
+  else if(list.some(isHeic)) $("wMsg").innerHTML="";
+  if(!fs.length) return 0;
   const added=fs.map(f=>{const id=uid();newFiles.set(id,{file:f,kind:"anh",url:URL.createObjectURL(f)});return {id,cat:wCat,cap:""};});
   D.gallery=added.concat(D.gallery);          // ảnh mới lên đầu
   if(wFilter!=="all"&&wFilter!==wCat){ wFilter="all"; $("wFilter").querySelectorAll(".pill").forEach(p=>p.classList.toggle("on",p.dataset.c==="all")); }
   renderWorks(); updateBar();
   scanDup(true);      // tự cảnh báo nếu ảnh vừa thêm trùng ảnh đã có
-});
+  return fs.length;
+}
 
 function thumbOf(it,kind){
   const nf=newFiles.get(it.id);
@@ -517,6 +575,74 @@ $("wList").addEventListener("click",e=>{
   if(a==="del"){ removeIds([p.id]); return; }
   D.gallery.forEach(x=>{ if(x.cover===false) delete x.cover; });
   renderWorks(); updateBar();
+});
+
+/* ======================= KÉO-THẢ & DÁN ẢNH ======================= */
+let dragN=0;
+const hasFiles=dt=>!!dt&&[...(dt.types||[])].includes("Files");
+function dropTarget(){ return curTab==="prices"?"prices":"works"; }
+function showDrop(on){
+  const ov=$("dropOv");
+  if(on){
+    const t=dropTarget();
+    $("dropT").textContent=t==="prices"?"Thả ảnh bảng giá vào đây":"Thả ảnh công trình vào đây";
+    $("dropS").textContent=t==="prices"?"Thêm vào mục Bảng giá":"Gắn ngành: "+CATS[wCat]+" — có thể thả cả thư mục ảnh";
+  }
+  ov.classList.toggle("on",on);
+}
+function walkEntry(entry,out){
+  return new Promise(res=>{
+    if(entry.isFile) entry.file(f=>{out.push(f);res();},()=>res());
+    else if(entry.isDirectory){
+      const rd=entry.createReader();
+      const next=()=>rd.readEntries(async es=>{ if(!es.length) return res(); for(const c of es) await walkEntry(c,out); next(); },()=>res());
+      next();
+    } else res();
+  });
+}
+async function filesFrom(dt){
+  const ents=[...(dt.items||[])].map(i=>i.webkitGetAsEntry?i.webkitGetAsEntry():null).filter(Boolean);
+  if(ents.some(e=>e.isDirectory)){ const out=[]; for(const e of ents) await walkEntry(e,out); return out; }
+  return [...(dt.files||[])];
+}
+async function addByTab(files){
+  if(!D) return;
+  heicNote="";
+  const anyImg=files.some(isImg);
+  if(curTab==="prices"){
+    const n=await addPriceFiles(files);
+    if(n||heicNote) toast((n?`Đã thêm ${n} ảnh bảng giá.`:"")+heicNote, !!heicNote); else if(!anyImg) toast("Không có file ảnh nào",true);
+    return;
+  }
+  if(curTab!=="works") switchTab("works");
+  const n=await addWorkFiles(files);
+  if(n||heicNote) toast((n?`Đã thêm ${n} ảnh vào ${CATS[wCat]}.`:"")+heicNote, !!heicNote); else if(!anyImg) toast("Không có file ảnh nào",true);
+}
+function toast(t,bad){
+  const html=`<div class="msg ${bad?"bad":"good"}">${esc(t.trim())}</div>`;
+  if(curTab==="prices"){
+    let m=$("pMsg"); if(!m){ $("pList").insertAdjacentHTML("beforebegin",'<div id="pMsg"></div>'); m=$("pMsg"); }
+    m.innerHTML=html; if(!bad) setTimeout(()=>{ if(m.innerHTML===html) m.innerHTML=""; },4000);
+  } else { $("wMsg").innerHTML=html; }
+}
+document.addEventListener("dragenter",e=>{ if(!D||!hasFiles(e.dataTransfer)) return; e.preventDefault(); dragN++; showDrop(true); });
+document.addEventListener("dragover",e=>{ if(!hasFiles(e.dataTransfer)) return; e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect=D?"copy":"none"; });
+document.addEventListener("dragleave",e=>{ if(!hasFiles(e.dataTransfer)) return; dragN=Math.max(0,dragN-1); if(!dragN) showDrop(false); });
+document.addEventListener("drop",async e=>{
+  if(!hasFiles(e.dataTransfer)) return;
+  e.preventDefault();                      // chặn trình duyệt mở ảnh ra tab mới (mất thay đổi đang làm)
+  dragN=0; showDrop(false);
+  if(!D) return;
+  await addByTab(await filesFrom(e.dataTransfer));
+});
+document.addEventListener("paste",e=>{
+  if(!D) return;
+  const t=e.target; if(t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA")) return;   // đang gõ chữ thì để dán chữ bình thường
+  const fs=[...((e.clipboardData&&e.clipboardData.files)||[])].filter(isImg);
+  if(!fs.length) return;
+  e.preventDefault();
+  const stamp=new Date().toISOString().slice(0,19).replace(/[T:]/g,"-");
+  addByTab(fs.map((f,i)=>new File([f],`anh-dan-${stamp}${fs.length>1?"-"+(i+1):""}.${(f.type.split("/")[1]||"png").replace("jpeg","jpg")}`,{type:f.type})));
 });
 
 /* ======================= CHỌN & XÓA HÀNG LOẠT ======================= */
@@ -712,17 +838,23 @@ $("vList").addEventListener("click",e=>{
 });
 
 /* ======================= BẢNG GIÁ ======================= */
-$("pFile").addEventListener("change",e=>{
-  const fs=[...e.target.files].filter(f=>f.type.startsWith("image/")||/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name));
-  e.target.value="";
-  if(!fs.length) return;
+$("pFile").addEventListener("change",e=>{ const fs=[...e.target.files]; e.target.value=""; addPriceFiles(fs); });
+async function addPriceFiles(list){
+  let fs=list.filter(isImg);
+  if(!fs.length) return 0;
+  const box=()=>{ let m=$("pMsg"); if(!m){ $("pList").insertAdjacentHTML("beforebegin",'<div id="pMsg"></div>'); m=$("pMsg"); } return m; };
+  const r=await normalizeFiles(fs, fs.some(isHeic)?(t=>{ box().innerHTML=`<div class="msg warn">${esc(t)}</div>`; }):null);
+  fs=r.files; heicNote=heicFailMsg(r.failed);
+  if(fs.some(isHeic)||list.some(isHeic)) box().innerHTML=r.failed.length?`<div class="msg bad">${heicFailMsg(r.failed).trim()}</div>`:"";
+  if(!fs.length) return 0;
   fs.forEach(f=>{
     const id=uid();
     newFiles.set(id,{file:f,kind:"gia",url:URL.createObjectURL(f)});
     D.prices.push({id,title:f.name.replace(/\.[^.]+$/,"").replace(/[_-]+/g," "),note:"",date:todayISO()});
   });
   renderPrices(); updateBar();
-});
+  return fs.length;
+}
 function renderPrices(){
   const L=$("pList");
   if(!D.prices.length){L.innerHTML='<div class="empty">Chưa có ảnh bảng giá — mục Bảng giá đang ẩn trên web.</div>';return;}
@@ -748,9 +880,10 @@ $("pList").addEventListener("input",e=>{
   const row=e.target.closest(".it"); const f=e.target.dataset.f; if(!row||!f) return;
   D.prices[+row.dataset.i][f]=e.target.value; updateBar();
 });
-$("pList").addEventListener("change",e=>{
+$("pList").addEventListener("change",async e=>{
   if(e.target.dataset.a!=="replace") return;
-  const f=e.target.files[0]; if(!f) return;
+  let f=e.target.files[0]; if(!f) return;
+  if(isHeic(f)){ const r=await normalizeFiles([f]); if(!r.files.length){ alert(heicFailMsg(r.failed).trim()); return; } f=r.files[0]; }
   const i=+e.target.closest(".it").dataset.i, p=D.prices[i];
   const old=newFiles.get(p.id); if(old){URL.revokeObjectURL(old.url);newFiles.delete(p.id);}
   const id=uid(); newFiles.set(id,{file:f,kind:"gia",url:URL.createObjectURL(f)});
@@ -875,7 +1008,7 @@ async function loadImg(file){
   try{ return await createImageBitmap(file,{imageOrientation:"from-image"}); }
   catch(_){
     return await new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);
-      im.onerror=()=>rej(new Error("Không đọc được ảnh "+file.name+". Nếu là ảnh HEIC trên máy tính, hãy đổi sang JPG."));
+      im.onerror=()=>rej(new Error("Không đọc được ảnh "+file.name+". Hãy mở ảnh trên máy, lưu lại dạng JPG rồi thêm lại."));
       im.src=URL.createObjectURL(file);});
   }
 }
