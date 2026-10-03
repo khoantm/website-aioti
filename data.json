@@ -26,10 +26,10 @@
  },
  "stats": {
   "fromYear": 2017,
-  "devices": "1.000+",
+  "devices": "3.000+",
   "kwp": "400.000+",
   "labelYear": "Cung cấp giải pháp - Thi công lắp đặt - Dịch vụ từ {năm}",
-  "labelDevices": "Thiết bị an ninh đã lắp đặt",
+  "labelDevices": "Thiết bị an ninh,  mạng wifi, smart home + năng lượng mặt trời đã lắp đặt",
   "labelKwp": "Điện sạch tạo ra mỗi năm, giúp khách hàng tiết kiệm hơn 1 tỷ đồng tiền điện và giảm khoảng 260 tấn CO₂ mỗi năm",
   "unitYear": "năm",
   "unitDevices": "",
