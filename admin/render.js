@@ -289,6 +289,7 @@
     const zalo = "https://zalo.me/" + esc(C.zalo);
     const years = Math.max(1, now.getFullYear() - (+S.fromYear || now.getFullYear()));
     const groups = (D.services.groups || []);
+    const unit = (v, d) => { const u = String(v == null ? d : v).trim(); return u ? `<small> ${esc(u)}</small>` : ""; };   // đơn vị sau con số; để trống thì ẩn
     const P = {}; IMG_SLOTS.forEach(s => { P[s.k] = imgPath(D, s.k); });
 
     const tiles = gal.map((p, i) => {
@@ -422,9 +423,9 @@ ${gal.length ? `    <a class="lnk" href="#congtrinh">Công trình</a>\n` : ""}${
 
 <div class="stats">
   <dl class="wrap stats-g">
-    <div><dd id="stY" data-from="${+S.fromYear}">${years}<small> năm</small></dd><dt>${esc(S.labelYear != null && S.labelYear !== "" ? S.labelYear : "Trong nghề từ {năm}").replace(/\{n[aă]m\}/gi, +S.fromYear)}</dt></div>
-    <div><dd>${esc(S.devices)}</dd><dt>${esc(S.labelDevices || "Thiết bị an ninh đã lắp đặt")}</dt></div>
-    <div><dd>${esc(S.kwp)}<small> kWp</small></dd><dt>${esc(S.labelKwp || "Điện mặt trời đã hòa lưới")}</dt></div>
+    <div><dd id="stY" data-from="${+S.fromYear}" data-unit="${esc(String(S.unitYear == null ? "năm" : S.unitYear).trim())}">${years}${unit(S.unitYear, "năm")}</dd><dt>${esc(S.labelYear != null && S.labelYear !== "" ? S.labelYear : "Trong nghề từ {năm}").replace(/\{n[aă]m\}/gi, +S.fromYear)}</dt></div>
+    <div><dd>${esc(S.devices)}${unit(S.unitDevices, "")}</dd><dt>${esc(S.labelDevices || "Thiết bị an ninh đã lắp đặt")}</dt></div>
+    <div><dd>${esc(S.kwp)}${unit(S.unitKwp, "kWp")}</dd><dt>${esc(S.labelKwp || "Điện mặt trời đã hòa lưới")}</dt></div>
   </dl>
 </div>
 

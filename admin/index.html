@@ -343,7 +343,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   <div class="wrap">
     <div class="top-in">
       <img id="topLogo" src="../img/logo-trang.png" alt="">
-      <div><h1>Quản lý website</h1><small>CÔNG TY TNHH AIOTI · <span id="appVer">v3.10</span></small></div>
+      <div><h1>Quản lý website</h1><small>CÔNG TY TNHH AIOTI · <span id="appVer">v3.11</span></small></div>
       <a id="viewSite" href="../" target="_blank" rel="noopener">Xem web ↗</a>
     </div>
     <nav class="tabs hide" id="tabs">
@@ -567,13 +567,13 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   </div>
 </div>
 
-<script src="render.js?v=310"></script>
+<script src="render.js?v=311"></script>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
 const CATS=AIOTIRender.CATS;
 const LS="aioti_admin_v1";
-const APP_VER="3.10";
+const APP_VER="3.11";
 const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
 let cfg=null;        // {token,owner,repo,branch}
@@ -625,6 +625,10 @@ async function load(){
   const dft=(o,k,v)=>{ if(o&&(o[k]==null||o[k]==="")) o[k]=v; };
   data.video=data.video||{};
   dft(data.stats,"labelYear","Trong nghề từ {năm}"); dft(data.stats,"labelDevices","Thiết bị an ninh đã lắp đặt"); dft(data.stats,"labelKwp","Điện mặt trời đã hòa lưới");
+  // đơn vị con số: chỉ điền mặc định khi chưa có (để trống = cố ý ẩn đơn vị)
+  if(data.stats.unitYear===undefined) data.stats.unitYear="năm";
+  if(data.stats.unitDevices===undefined) data.stats.unitDevices="";
+  if(data.stats.unitKwp===undefined) data.stats.unitKwp="kWp";
   dft(data.works,"eyebrow","Công trình"); dft(data.services,"eyebrow","Dịch vụ");
   dft(data.video,"eyebrow","Video"); dft(data.video,"title","Video công trình");
   dft(data.pricing,"eyebrow","Bảng giá"); dft(data.contact,"eyebrow","Liên hệ"); dft(data.contact,"title","Gọi AIOTI");
@@ -1444,11 +1448,14 @@ function buildForms(){
   <details class="grp"><summary>Con số năng lực</summary><div>
     <p class="sep-t">Ô 1 · Số năm</p>
     ${F("Năm bắt đầu làm nghề","stats.fromYear","num","Số năm trong nghề tự tăng mỗi năm.")}
+    ${F("Đơn vị sau số năm","stats.unitYear",null,"Ví dụ: <i>năm</i>, <i>năm kinh nghiệm</i>. Để trống thì không hiện đơn vị.")}
     ${F("Dòng chữ dưới số năm","stats.labelYear",null,"Viết <b>{năm}</b> ở đâu thì web tự điền năm bắt đầu vào đó. Ví dụ: <i>Trong nghề từ {năm}</i> → Trong nghề từ 2017.")}
     <div class="sep"></div><p class="sep-t">Ô 2 · Thiết bị an ninh</p>
-    <div class="g2">${F("Con số","stats.devices")}${F("Dòng chữ bên dưới","stats.labelDevices")}</div>
+    <div class="g2">${F("Con số","stats.devices")}${F("Đơn vị (chữ nhỏ sau con số)","stats.unitDevices",null,"Ví dụ: <i>thiết bị</i>, <i>camera</i>. Để trống thì không hiện.")}</div>
+    ${F("Dòng chữ bên dưới","stats.labelDevices")}
     <div class="sep"></div><p class="sep-t">Ô 3 · Điện mặt trời</p>
-    <div class="g2">${F("Con số (đơn vị kWp tự thêm)","stats.kwp")}${F("Dòng chữ bên dưới","stats.labelKwp")}</div>
+    <div class="g2">${F("Con số","stats.kwp")}${F("Đơn vị (chữ nhỏ sau con số)","stats.unitKwp",null,"Ví dụ: <i>kWp</i>, <i>MWp</i>, <i>công trình</i>. Để trống thì không hiện.")}</div>
+    ${F("Dòng chữ bên dưới","stats.labelKwp")}
   </div></details>
   <details class="grp"><summary>Dịch vụ</summary><div>
     ${F("Dòng chữ nhỏ phía trên","services.eyebrow")}

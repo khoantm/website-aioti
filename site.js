@@ -7,7 +7,9 @@
   const stY = $("stY");
   if (stY && stY.dataset.from) {
     const y = Math.max(1, new Date().getFullYear() - (+stY.dataset.from));
-    stY.innerHTML = y + "<small> năm</small>";
+    const u = stY.dataset.unit == null ? "năm" : stY.dataset.unit;
+    stY.textContent = y;
+    if (u) { const sm = document.createElement("small"); sm.textContent = " " + u; stY.appendChild(sm); }
   }
   const yr = $("yr"); if (yr) yr.textContent = new Date().getFullYear();
 
