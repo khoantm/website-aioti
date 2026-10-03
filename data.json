@@ -27,7 +27,10 @@
  "stats": {
   "fromYear": 2017,
   "devices": "1.000+",
-  "kwp": "100+"
+  "kwp": "100+",
+  "labelYear": "Cung cấp giải pháp - Thi công lắp đặt - Dịch vụ từ {năm}",
+  "labelDevices": "Thiết bị an ninh đã lắp đặt",
+  "labelKwp": "Điện mặt trời đã hòa lưới"
  },
  "services": {
   "title": "Sản phẩm và dịch vụ AIOTI cung cấp",
@@ -213,6 +216,56 @@
    "h": 1400
   },
   {
+   "id": "01",
+   "cat": "solar",
+   "cap": "Biệt thự — dàn pin lắp trên mái, không phá vỡ kiến trúc mặt tiền",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "02",
+   "cat": "solar",
+   "cap": "Dàn pin hoàn thiện trên mái bê tông, có camera giám sát riêng cho khu vực mái",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "03",
+   "cat": "solar",
+   "cap": "Hai dãy pin bố trí song song, chừa lối đi giữa để vệ sinh và bảo trì",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "04",
+   "cat": "solar",
+   "cap": "Lối đi giữa hai dãy pin và máng thoát nước — thiết kế để mái không đọng nước",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "09",
+   "cat": "solar",
+   "cap": "Hệ hybrid có lưu trữ: inverter, tủ điện và ba module pin 16,08 kWh",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "10",
+   "cat": "solar",
+   "cap": "Tủ điện dán nhãn từng aptomat — EVN, BACKUP, LOAD, SPD, CB PV1, CB PV2",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "14",
+   "cat": "solar",
+   "cap": "Cẩu pin lưu trữ vào công trình bằng xe cẩu chuyên dụng",
+   "w": 1400,
+   "h": 1050,
+   "cover": true
+  },
+  {
    "id": "acvchb39",
    "cat": "solar",
    "cap": "",
@@ -234,6 +287,27 @@
    "h": 1400
   },
   {
+   "id": "05",
+   "cat": "solar",
+   "cap": "Khung nâng cao vừa phát điện vừa che nắng cho sân thượng",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "06",
+   "cat": "solar",
+   "cap": "Kết cấu thép mạ kẽm nhúng nóng, giằng chéo chống lật khi gió lớn",
+   "w": 1400,
+   "h": 1050
+  },
+  {
+   "id": "07",
+   "cat": "solar",
+   "cap": "Khung giá đỡ dựng xong trước khi lắp pin — chân đế xử lý chống thấm tại điểm khoan",
+   "w": 1400,
+   "h": 1050
+  },
+  {
    "id": "acvcih28",
    "cat": "solar",
    "cap": "",
@@ -249,55 +323,6 @@
   },
   {
    "id": "acvcjwk8",
-   "cat": "solar",
-   "cap": "",
-   "w": 1050,
-   "h": 1400
-  },
-  {
-   "id": "acvcjobq",
-   "cat": "solar",
-   "cap": "",
-   "w": 240,
-   "h": 320
-  },
-  {
-   "id": "acvcjd4g",
-   "cat": "solar",
-   "cap": "",
-   "w": 240,
-   "h": 320
-  },
-  {
-   "id": "acvcje2n",
-   "cat": "solar",
-   "cap": "",
-   "w": 240,
-   "h": 320
-  },
-  {
-   "id": "acvcknu2",
-   "cat": "solar",
-   "cap": "",
-   "w": 240,
-   "h": 320
-  },
-  {
-   "id": "acvckrvf",
-   "cat": "solar",
-   "cap": "",
-   "w": 1050,
-   "h": 1400
-  },
-  {
-   "id": "acvckjqo",
-   "cat": "solar",
-   "cap": "",
-   "w": 1050,
-   "h": 1400
-  },
-  {
-   "id": "acvcm1jj",
    "cat": "solar",
    "cap": "",
    "w": 1050,
@@ -1300,6 +1325,34 @@
    "h": 1400
   },
   {
+   "id": "acvcjobq",
+   "cat": "solar",
+   "cap": "",
+   "w": 240,
+   "h": 320
+  },
+  {
+   "id": "acvcjd4g",
+   "cat": "solar",
+   "cap": "",
+   "w": 240,
+   "h": 320
+  },
+  {
+   "id": "acvcje2n",
+   "cat": "solar",
+   "cap": "",
+   "w": 240,
+   "h": 320
+  },
+  {
+   "id": "acvcknu2",
+   "cat": "solar",
+   "cap": "",
+   "w": 240,
+   "h": 320
+  },
+  {
    "id": "3n0m89jh",
    "cat": "solar",
    "cap": "",
@@ -1342,72 +1395,30 @@
    "h": 1400
   },
   {
-   "id": "01",
+   "id": "acvckrvf",
    "cat": "solar",
-   "cap": "Biệt thự — dàn pin lắp trên mái, không phá vỡ kiến trúc mặt tiền",
-   "w": 1400,
-   "h": 1050
+   "cap": "",
+   "w": 1050,
+   "h": 1400
   },
   {
-   "id": "02",
+   "id": "acvckjqo",
    "cat": "solar",
-   "cap": "Dàn pin hoàn thiện trên mái bê tông, có camera giám sát riêng cho khu vực mái",
-   "w": 1400,
-   "h": 1050
+   "cap": "",
+   "w": 1050,
+   "h": 1400
   },
   {
-   "id": "03",
+   "id": "acvcm1jj",
    "cat": "solar",
-   "cap": "Hai dãy pin bố trí song song, chừa lối đi giữa để vệ sinh và bảo trì",
-   "w": 1400,
-   "h": 1050
-  },
-  {
-   "id": "04",
-   "cat": "solar",
-   "cap": "Lối đi giữa hai dãy pin và máng thoát nước — thiết kế để mái không đọng nước",
-   "w": 1400,
-   "h": 1050
-  },
-  {
-   "id": "05",
-   "cat": "solar",
-   "cap": "Khung nâng cao vừa phát điện vừa che nắng cho sân thượng",
-   "w": 1400,
-   "h": 1050
-  },
-  {
-   "id": "06",
-   "cat": "solar",
-   "cap": "Kết cấu thép mạ kẽm nhúng nóng, giằng chéo chống lật khi gió lớn",
-   "w": 1400,
-   "h": 1050
-  },
-  {
-   "id": "07",
-   "cat": "solar",
-   "cap": "Khung giá đỡ dựng xong trước khi lắp pin — chân đế xử lý chống thấm tại điểm khoan",
-   "w": 1400,
-   "h": 1050
+   "cap": "",
+   "w": 1050,
+   "h": 1400
   },
   {
    "id": "08",
    "cat": "solar",
    "cap": "Nhìn từ đường: dàn pin nằm gọn sau mái đua, khuất tầm nhìn mặt tiền",
-   "w": 1400,
-   "h": 1050
-  },
-  {
-   "id": "09",
-   "cat": "solar",
-   "cap": "Hệ hybrid có lưu trữ: inverter, tủ điện và ba module pin 16,08 kWh",
-   "w": 1400,
-   "h": 1050
-  },
-  {
-   "id": "10",
-   "cat": "solar",
-   "cap": "Tủ điện dán nhãn từng aptomat — EVN, BACKUP, LOAD, SPD, CB PV1, CB PV2",
    "w": 1400,
    "h": 1050
   },
@@ -1431,14 +1442,6 @@
    "cap": "Hộp cách ly DC chuẩn IP67 — ngắt được nguồn một chiều từ pin khi cần sửa chữa",
    "w": 1400,
    "h": 1866
-  },
-  {
-   "id": "14",
-   "cat": "solar",
-   "cap": "Cẩu pin lưu trữ vào công trình bằng xe cẩu chuyên dụng",
-   "w": 1400,
-   "h": 1050,
-   "cover": true
   }
  ],
  "pricing": {
@@ -1501,5 +1504,12 @@
   "intro": "Quay thực tế tại các công trình AIOTI thi công. Bấm vào để xem ngay trên trang.",
   "channel": "",
   "eyebrow": "Video"
+ },
+ "theme": {
+  "preset": "xanh-cn",
+  "brand": "#0B5FA5",
+  "sun": "#FFB300",
+  "sky": "#0891B2",
+  "ink": "#061423"
  }
 }
