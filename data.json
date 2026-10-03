@@ -1509,10 +1509,10 @@
   "eyebrow": "Video"
  },
  "theme": {
-  "preset": "navy",
-  "brand": "#1E3A8A",
-  "sun": "#F59E0B",
-  "sky": "#0EA5E9",
-  "ink": "#070D1F"
+  "preset": "xanh-rung",
+  "brand": "#166534",
+  "sun": "#EAB308",
+  "sky": "#2B6CB0",
+  "ink": "#05140A"
  }
 }
