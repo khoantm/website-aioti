@@ -27,7 +27,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .wrap{max-width:1480px;margin:0 auto;padding:0 14px}
 @media(min-width:900px){ .wrap{padding:0 28px} }
 /* thẻ toàn ô gõ chữ: giữ khổ vừa đọc */
-#vContent,#vContact{max-width:880px;margin-left:auto;margin-right:auto}
+#vContent,#vContact,#vBackup{max-width:880px;margin-left:auto;margin-right:auto}
 /* thanh thẻ trên máy tính rộng: xếp gọn bên trái thay vì dãn đều */
 @media(min-width:1000px){ .tab{flex:0 0 auto;padding:10px 22px 11px} }
 /* kiểu Danh sách, Video, Bảng giá: 2 cột khi màn hình rộng */
@@ -335,6 +335,17 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
 .im-a .btn{flex:1;padding:9px 10px;font-size:13.5px}
 .im-a .btn[hidden]{display:none}
 .im .msg{font-size:12.5px;margin:2px 0 0;padding:7px 9px}
+/* sao lưu */
+.bk-last{font-size:13.5px;color:var(--muted);margin:10px 0 0}
+.hrow{display:flex;gap:10px;align-items:center;padding:10px 2px;border-top:1px dashed var(--line)}
+.hrow:first-child{border-top:0}
+.hrow.cur{background:#FFFBF0;border-radius:8px;padding:10px 8px}
+.hmeta{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:14px}
+.hmeta b{font-family:'IBM Plex Mono';font-size:13.5px}
+.hmsg{flex:0 0 100%;color:var(--muted);font-size:13px;line-height:1.4}
+.hmeta code{font-size:11px;padding:0 5px}
+.hact{display:flex;gap:6px;flex:0 0 auto}
+@media(max-width:520px){ .hrow{flex-wrap:wrap} .hact{flex:0 0 100%} .hact .ib{flex:1} }
 </style>
 </head>
 <body>
@@ -343,7 +354,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   <div class="wrap">
     <div class="top-in">
       <img id="topLogo" src="../img/logo-trang.png" alt="">
-      <div><h1>Quản lý website</h1><small>CÔNG TY TNHH AIOTI · <span id="appVer">v3.11</span></small></div>
+      <div><h1>Quản lý website</h1><small>CÔNG TY TNHH AIOTI · <span id="appVer">v3.12</span></small></div>
       <a id="viewSite" href="../" target="_blank" rel="noopener">Xem web ↗</a>
     </div>
     <nav class="tabs hide" id="tabs">
@@ -353,6 +364,7 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       <button class="tab" data-t="content">Nội dung</button>
       <button class="tab" data-t="theme">Màu sắc</button>
       <button class="tab" data-t="contact">Liên hệ</button>
+      <button class="tab" data-t="backup">Sao lưu</button>
     </nav>
   </div>
 </div>
@@ -382,6 +394,10 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       </div></details>
       <button class="btn btn-red btn-w" id="btnLogin">Kết nối</button>
       <div id="loginMsg"></div>
+      <details class="grp" style="margin-top:14px"><summary>Khôi phục web từ file sao lưu</summary><div>
+        <p class="hint" style="margin-bottom:10px">Dùng khi web bị mất / kho GitHub trống nên chưa vào được công cụ quản lý. Dán mã khóa ở trên, rồi chọn file <b>.zip</b> sao lưu.</p>
+        <button class="btn btn-line btn-w" id="btnLoginZip" type="button">Chọn file sao lưu (.zip)…</button>
+      </div></details>
     </div>
   </section>
 
@@ -536,6 +552,27 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
     </div>
   </section>
 
+  <!-- SAO LƯU -->
+  <section id="vBackup" class="hide">
+    <div class="card">
+      <h2>Tải bản sao lưu về máy</h2>
+      <p class="sub">Tải toàn bộ web đang chạy (chữ, ảnh, video, bảng giá, màu sắc, logo, công cụ quản lý) thành một file <b>.zip</b>. Dùng để khôi phục khi web bị lỗi, bị hack, hoặc mất tài khoản GitHub.</p>
+      <button class="btn btn-sun btn-w" id="bkDown" type="button">⬇ Tải bản sao lưu (.zip)</button>
+      <p class="bk-last" id="bkLast"></p>
+      <p class="hint" style="margin-top:6px">Nên tải sau mỗi đợt thay đổi lớn. Cất 1 bản trên máy tính + 1 bản trên NAS / ổ cứng ngoài.</p>
+    </div>
+    <div class="card">
+      <h2>Lịch sử các lần đăng</h2>
+      <p class="sub">Mỗi lần bấm <b>Đăng lên web</b>, GitHub tự lưu lại một bản. Bấm <b>Xem</b> để xem lại web lúc đó, <b>Khôi phục</b> để đưa web về bản đó — bản hiện tại vẫn giữ trong lịch sử.</p>
+      <div id="bkHist"><button class="btn btn-line btn-w" id="bkHistLoad" type="button">Xem lịch sử</button></div>
+    </div>
+    <div class="card">
+      <h2>Khôi phục từ file sao lưu</h2>
+      <p class="sub">Chọn file <b>.zip</b> đã tải về trước đây (hoặc file "Download ZIP" của GitHub). Toàn bộ web sẽ về đúng như trong file.</p>
+      <button class="btn btn-line btn-w" id="bkZip" type="button">Chọn file sao lưu (.zip)…</button>
+    </div>
+  </section>
+
   <!-- LIÊN HỆ -->
   <section id="vContact" class="hide">
     <div id="ctForms"></div>
@@ -567,13 +604,13 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
   </div>
 </div>
 
-<script src="render.js?v=311"></script>
+<script src="render.js?v=312"></script>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
 const CATS=AIOTIRender.CATS;
 const LS="aioti_admin_v1";
-const APP_VER="3.11";
+const APP_VER="3.12";
 const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
 let cfg=null;        // {token,owner,repo,branch}
@@ -610,13 +647,15 @@ const raw=p=>`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${base.
 
 async function load(){
   show("vLoad"); $("loadMsg").textContent="Đang tải website từ GitHub…";
-  const ref=await gh(`/git/ref/heads/${cfg.branch}`);
+  let ref;
+  try{ ref=await gh(`/git/ref/heads/${cfg.branch}`); }
+  catch(e){ if(e.status===409||e.status===404){ const x=new Error("Kho GitHub đang trống hoặc không tìm thấy nhánh "+cfg.branch+". Nếu có file sao lưu, mở mục \"Khôi phục web từ file sao lưu\" bên dưới."); x.status=0; throw x; } throw e; }
   const commit=ref.object.sha;
   const c=await gh(`/git/commits/${commit}`);
   const tree=await gh(`/git/trees/${c.tree.sha}?recursive=1`);
   const paths=new Set(tree.tree.filter(t=>t.type==="blob").map(t=>t.path));
   const dj=tree.tree.find(t=>t.path==="data.json");
-  if(!dj){ const e=new Error("Chưa có file data.json trên GitHub. Hãy upload bộ file khởi tạo trước (xem hướng dẫn)."); throw e; }
+  if(!dj){ const e=new Error("Chưa có file data.json trên GitHub. Hãy upload bộ file khởi tạo trước (xem hướng dẫn), hoặc dùng mục \"Khôi phục web từ file sao lưu\" bên dưới."); throw e; }
   const blob=await gh(`/git/blobs/${dj.sha}`);
   const data=JSON.parse(b64ToText(blob.content));
   data.gallery=data.gallery||[]; data.prices=data.prices||[];
@@ -640,18 +679,20 @@ async function load(){
   $("acctInfo").innerHTML=`Kho: <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> · nhánh <b>${esc(cfg.branch)}</b><br>Phiên bản đang sửa: <code>${commit.slice(0,7)}</code><br>Công cụ quản lý: <b>v${APP_VER}</b>`;
   $("viewSite").href=D.site&&D.site.url?D.site.url:"../";
   buildForms(); setView(wView); renderVideos(); renderPrices(); renderTheme(); updateBar(); histReset();
+  if(typeof hist!=="undefined"){ hist=[]; $("bkHist").innerHTML='<button class="btn btn-line btn-w" id="bkHistLoad2" type="button" onclick="loadHistory(false)">Xem lịch sử</button>'; }
   $("tabs").classList.remove("hide"); $("bar").classList.remove("hide");
   switchTab(curTab||"works");
 }
 
 /* ======================= GIAO DIỆN CHUNG ======================= */
-const VIEWS=["vLogin","vLoad","vWorks","vVideos","vPrices","vContent","vTheme","vContact"];
+const VIEWS=["vLogin","vLoad","vWorks","vVideos","vPrices","vContent","vTheme","vContact","vBackup"];
 function show(v){VIEWS.forEach(x=>$(x).classList.toggle("hide",x!==v));}
 let curTab="works";
 function switchTab(t){
   curTab=t;
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
-  show({works:"vWorks",videos:"vVideos",prices:"vPrices",content:"vContent",theme:"vTheme",contact:"vContact"}[t]);
+  show({works:"vWorks",videos:"vVideos",prices:"vPrices",content:"vContent",theme:"vTheme",contact:"vContact",backup:"vBackup"}[t]);
+  if(t==="backup"&&typeof renderBackup==="function"){ renderBackup(); if(!hist.length&&D) loadHistory(false); }
   window.scrollTo(0,0);
 }
 $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab"); if(b) switchTab(b.dataset.t);});
@@ -1900,8 +1941,10 @@ $("btnPublish").addEventListener("click",async()=>{
     ov.querySelector(".dlg").innerHTML=`<h3>Đã đăng xong</h3>
       <div class="msg good">Đăng lúc ${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}. Web tự cập nhật sau khoảng <b>1–2 phút</b>.</div>
       <p>Mở web lúc đó nếu vẫn thấy bản cũ, kéo xuống để tải lại trang.</p>
-      <div class="row"><a class="btn btn-line" href="${esc((D.site&&D.site.url)||"../")}" target="_blank" rel="noopener">Xem web ↗</a><button class="btn btn-red" id="okClose">Xong</button></div>`;
+      <div class="row"><a class="btn btn-line" href="${esc((D.site&&D.site.url)||"../")}" target="_blank" rel="noopener">Xem web ↗</a><button class="btn btn-line" id="okBk">⬇ Tải bản sao lưu</button><button class="btn btn-red" id="okClose">Xong</button></div>`;
     ov.querySelector("#okClose").onclick=()=>ov.remove();
+    ov.querySelector("#okBk").onclick=()=>{ ov.remove(); downloadBackup(); };
+    if(typeof hist!=="undefined"){ hist=[]; }          // lịch sử đổi → tải lại khi mở tab Sao lưu
   }catch(e){
     console.error(e);
     log(friendly(e),"err");
@@ -1946,5 +1989,6 @@ $("btnReload").addEventListener("click",async()=>{
   }
 })();
 </script>
+<script src="backup.js?v=312"></script>
 </body>
 </html>
