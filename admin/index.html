@@ -24,7 +24,18 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--cream);co
 h1,h2,h3{font-family:'Be Vietnam Pro',sans-serif;letter-spacing:-.02em;line-height:1.25}
 button,input,select,textarea{font:inherit;color:inherit}
 .hide{display:none!important}
-.wrap{max-width:820px;margin:0 auto;padding:0 14px}
+.wrap{max-width:1480px;margin:0 auto;padding:0 14px}
+@media(min-width:900px){ .wrap{padding:0 28px} }
+/* thẻ toàn ô gõ chữ: giữ khổ vừa đọc */
+#vContent,#vContact{max-width:880px;margin-left:auto;margin-right:auto}
+/* thanh thẻ trên máy tính rộng: xếp gọn bên trái thay vì dãn đều */
+@media(min-width:1000px){ .tab{flex:0 0 auto;padding:10px 22px 11px} }
+/* kiểu Danh sách, Video, Bảng giá: 2 cột khi màn hình rộng */
+@media(min-width:1150px){
+  .list:not(.grid){grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .list:not(.grid)>.empty{grid-column:1/-1}
+}
+@media(min-width:1600px){ .list.g-lg{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))} }
 
 /* thanh trên */
 .top{position:sticky;top:0;z-index:40;background:linear-gradient(120deg,var(--deep),var(--brand));color:#fff;
@@ -920,6 +931,9 @@ function editTile(id){
 /* So "vân tay hình ảnh": thu nhỏ ảnh còn 9×8 điểm xám, ghi lại chiều sáng/tối giữa các điểm cạnh nhau.
    Cùng một tấm ảnh dù đã nén lại, đổi tên, đổi cỡ vẫn cho vân tay gần như giống hệt. */
 const hashCache=new Map(), DUP_MAX=5;
+const pairKey=(x,y)=>x<y?x+"|"+y:y+"|"+x;
+function dupOkHas(x,y){ return (D.dupOk||[]).includes(pairKey(x,y)); }
+function dupOkAdd(x,y){ D.dupOk=D.dupOk||[]; const k=pairKey(x,y); if(!D.dupOk.includes(k)) D.dupOk.push(k); }
 function hashOf(src){
   return new Promise(res=>{
     const im=new Image(); im.crossOrigin="anonymous";
@@ -955,7 +969,7 @@ async function scanDup(onlyNew){
   // gom nhóm các ảnh giống nhau
   const par=items.map((_,i)=>i), f=i=>par[i]===i?i:(par[i]=f(par[i]));
   for(let i=0;i<items.length;i++) for(let j=i+1;j<items.length;j++)
-    if(hs[i]&&hs[j]&&ham(hs[i],hs[j])<=DUP_MAX) par[f(j)]=f(i);
+    if(hs[i]&&hs[j]&&ham(hs[i],hs[j])<=DUP_MAX&&!dupOkHas(items[i].id,items[j].id)) par[f(j)]=f(i);
   const g={}; items.forEach((_,i)=>{ if(hs[i]){ const r=f(i); (g[r]=g[r]||[]).push(i); } });
   let groups=Object.values(g).filter(x=>x.length>1);
   if(onlyNew) groups=groups.filter(x=>x.some(i=>newFiles.has(items[i].id)));
@@ -974,14 +988,21 @@ async function scanDup(onlyNew){
           return `<label class="${del?"x":""}"><img src="${esc(thumbOf(p,"anh"))}" alt=""><input type="checkbox" data-dup="${esc(p.id)}"${del?" checked":""}><span>${del?"XÓA":"GIỮ"} · ${String(i+1).padStart(2,"0")}</span></label>`;}).join("")}
       </div></div>`;}).join("")}
     <div class="row" style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      <button class="btn btn-line" id="dupClose" type="button" style="flex:1">Để sau</button>
-      <button class="btn btn-red" id="dupDel" type="button" style="flex:2">Xóa ${extra} ảnh trùng</button>
+      <button class="btn btn-line" id="dupClose" type="button" style="flex:1" title="Đóng, lần sau vẫn nhắc">Để sau</button>
+      <button class="btn btn-line" id="dupKeep" type="button" style="flex:1.4" title="Giữ hết các ảnh này, không nhắc lại">Giữ tất cả, không hỏi lại</button>
+      <button class="btn btn-red" id="dupDel" type="button" style="flex:1.6">Xóa ${extra} ảnh trùng</button>
     </div></div>`;
   const cnt=()=>{ const n=out.querySelectorAll("input[data-dup]:checked").length; $("dupDel").textContent=`Xóa ${n} ảnh trùng`; $("dupDel").disabled=!n; };
   out.querySelectorAll("input[data-dup]").forEach(ip=>ip.addEventListener("change",()=>{
     const l=ip.closest("label"); l.classList.toggle("x",ip.checked); l.querySelector("span").textContent=(ip.checked?"XÓA":"GIỮ")+l.querySelector("span").textContent.slice(3); cnt();
   }));
   $("dupClose").onclick=()=>{ out.innerHTML=""; };
+  $("dupKeep").onclick=()=>{
+    groups.forEach(x=>{ for(let p=0;p<x.length;p++) for(let q=p+1;q<x.length;q++) dupOkAdd(items[x[p]].id,items[x[q]].id); });
+    const n=groups.reduce((s,x)=>s+x.length,0);
+    out.innerHTML=`<div class="msg good">Đã giữ cả ${n} ảnh. Công cụ sẽ không nhắc trùng các ảnh này nữa${newFiles.size?"":" — bấm <b>Đăng lên web</b> để lưu ghi nhớ này"}.</div>`;
+    updateBar();
+  };
   $("dupDel").onclick=()=>{
     const ids=[...out.querySelectorAll("input[data-dup]:checked")].map(x=>x.dataset.dup);
     const grpAll=groups.some(x=>x.every(i=>ids.includes(items[i].id)));
@@ -1312,6 +1333,7 @@ $("btnPublish").addEventListener("click",async()=>{
     // 4. dữ liệu + trang
     log("Dựng lại trang web…");
     D.gallery.forEach(x=>{ if(x.cover===false) delete x.cover; });
+    if(D.dupOk){ const ids=new Set(D.gallery.map(p=>p.id)); D.dupOk=D.dupOk.filter(k=>k.split("|").every(i=>ids.has(i))); if(!D.dupOk.length) delete D.dupOk; }
     const html=AIOTIRender.renderSite(D);
     entries.push({path:"index.html",mode:"100644",type:"blob",content:html});
     entries.push({path:"data.json",mode:"100644",type:"blob",content:JSON.stringify(D,null,1)});
