@@ -77,23 +77,26 @@
     document.addEventListener("keydown", e => { if (e.key === "Escape" && vb.classList.contains("on")) vClose(); });
   }
 
-  /* ---- lọc Công trình theo ngành: chỉ hiện khi từ 2 ngành trở lên có ≥ 3 ảnh ---- */
-  (function () {
+  /* ---- lọc theo ngành — dùng chung cho Công trình và Video ----
+     Công trình: hiện khi từ 2 ngành trở lên có ≥ 3 ảnh · Video: hiện khi từ 2 ngành trở lên có video */
+  function catFilter(barId, items, min) {
     const NAME = { solar: "Điện mặt trời", camera: "Camera an ninh", smart: "Nhà thông minh" };
     const cnt = {};
-    shots.forEach(t => { const c = t.dataset.cat || "solar"; cnt[c] = (cnt[c] || 0) + 1; });
-    const big = Object.keys(NAME).filter(c => (cnt[c] || 0) >= 3);
-    const bar = $("filt");
+    items.forEach(t => { const c = t.dataset.cat || "solar"; cnt[c] = (cnt[c] || 0) + 1; });
+    const big = Object.keys(NAME).filter(c => (cnt[c] || 0) >= min);
+    const bar = $(barId);
     if (!bar || big.length < 2) return;
     bar.hidden = false;
-    bar.innerHTML = '<button class="on" data-c="all">Tất cả<i>' + shots.length + '</i></button>' +
+    bar.innerHTML = '<button class="on" data-c="all">Tất cả<i>' + items.length + '</i></button>' +
       big.map(c => `<button data-c="${c}">${NAME[c]}<i>${cnt[c]}</i></button>`).join("");
     bar.addEventListener("click", e => {
       const b = e.target.closest("button"); if (!b) return;
       bar.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
-      shots.forEach(t => t.classList.toggle("off", !(b.dataset.c === "all" || (t.dataset.cat || "solar") === b.dataset.c)));
+      items.forEach(t => t.classList.toggle("off", !(b.dataset.c === "all" || (t.dataset.cat || "solar") === b.dataset.c)));
     });
-  })();
+  }
+  catFilter("filt", shots, 3);
+  catFilter("vfilt", [...document.querySelectorAll(".vid")], 1);
 
   /* ---- nút lên đầu trang ---- */
   const top = $("topBtn");

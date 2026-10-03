@@ -39,6 +39,210 @@
 </svg>`
   };
 
+
+  /* =====================================================================
+     MÀU SẮC — bộ màu mẫu + tự tính toàn bộ tông màu từ 4 màu gốc
+     brand: màu chủ đạo · sun: màu nhấn · sky: màu phụ · ink: nền tối
+     ===================================================================== */
+  const THEME_DEFAULT = { preset: "hoang-hon", brand: "#A31000", sun: "#FFB300", sky: "#1C79A8", ink: "#1A0805" };
+  const PRESETS = [
+    { id: "hoang-hon",  name: "Đỏ hoàng hôn (mặc định)", group: "Đỏ – cam",   brand: "#A31000", sun: "#FFB300", sky: "#1C79A8", ink: "#1A0805" },
+    { id: "do-tet",     name: "Đỏ Tết",                  group: "Đỏ – cam",   brand: "#C8102E", sun: "#FFD000", sky: "#1C79A8", ink: "#1E0508" },
+    { id: "do-do",      name: "Đỏ đô sang trọng",        group: "Đỏ – cam",   brand: "#8B0A1E", sun: "#D9A441", sky: "#2E5E7E", ink: "#1A0609" },
+    { id: "do-cam",     name: "Đỏ cam",                  group: "Đỏ – cam",   brand: "#B3260A", sun: "#FFB300", sky: "#0E7490", ink: "#1C0A04" },
+    { id: "cam",        name: "Cam năng động",           group: "Đỏ – cam",   brand: "#C2410C", sun: "#FFC233", sky: "#1971C2", ink: "#1D0C05" },
+    { id: "ho-phach",   name: "Hổ phách nắng",           group: "Đỏ – cam",   brand: "#A14A06", sun: "#FCD34D", sky: "#0369A1", ink: "#1C1004" },
+    { id: "nau",        name: "Nâu cà phê",              group: "Đỏ – cam",   brand: "#7C2D12", sun: "#E0A955", sky: "#3F6E8C", ink: "#1A0D07" },
+    { id: "xanh-la",    name: "Xanh lá năng lượng",      group: "Xanh lá",    brand: "#15803D", sun: "#FACC15", sky: "#0E7490", ink: "#06180D" },
+    { id: "xanh-rung",  name: "Xanh rừng",               group: "Xanh lá",    brand: "#166534", sun: "#EAB308", sky: "#2B6CB0", ink: "#05140A" },
+    { id: "xanh-reu",   name: "Xanh rêu",                group: "Xanh lá",    brand: "#4D6B12", sun: "#FACC15", sky: "#0E7490", ink: "#0E1505" },
+    { id: "xanh-la-ma", name: "Xanh lá mạ",              group: "Xanh lá",    brand: "#3F7D20", sun: "#FFC233", sky: "#1C79A8", ink: "#0B1607" },
+    { id: "teal",       name: "Xanh ngọc",               group: "Xanh ngọc",  brand: "#0F766E", sun: "#FBBF24", sky: "#0369A1", ink: "#04161A" },
+    { id: "cyan",       name: "Xanh cyan hiện đại",      group: "Xanh ngọc",  brand: "#0E7490", sun: "#FDE047", sky: "#2563EB", ink: "#031519" },
+    { id: "xanh-cn",    name: "Xanh dương công nghệ",    group: "Xanh dương", brand: "#0B5FA5", sun: "#FFB300", sky: "#0891B2", ink: "#061423" },
+    { id: "navy",       name: "Xanh navy doanh nghiệp",  group: "Xanh dương", brand: "#1E3A8A", sun: "#F59E0B", sky: "#0EA5E9", ink: "#070D1F" },
+    { id: "xanh-bien",  name: "Xanh biển",               group: "Xanh dương", brand: "#0369A1", sun: "#FDBA74", sky: "#0D9488", ink: "#04121C" },
+    { id: "xanh-dien",  name: "Xanh điện",               group: "Xanh dương", brand: "#1D4ED8", sun: "#22D3EE", sky: "#7C3AED", ink: "#070B1F" },
+    { id: "an-ninh",    name: "Xanh an ninh",            group: "Xanh dương", brand: "#1F4E79", sun: "#F2C14E", sky: "#3A8FB7", ink: "#08121C" },
+    { id: "tim-than",   name: "Tím than",                group: "Tím – hồng", brand: "#4C1D95", sun: "#F5B83D", sky: "#0891B2", ink: "#110822" },
+    { id: "tim-hong",   name: "Tím hồng",                group: "Tím – hồng", brand: "#86198F", sun: "#FBBF24", sky: "#2563EB", ink: "#1A0619" },
+    { id: "hong",       name: "Hồng đậm",                group: "Tím – hồng", brand: "#BE185D", sun: "#FCD34D", sky: "#0284C7", ink: "#1E0610" },
+    { id: "than-chi",   name: "Than chì",                group: "Trung tính", brand: "#374151", sun: "#F59E0B", sky: "#2563EB", ink: "#0B0F14" },
+    { id: "den-vang",   name: "Đen vàng cao cấp",        group: "Trung tính", brand: "#1C1917", sun: "#EAB308", sky: "#0E7490", ink: "#0C0A09" },
+    { id: "xam-xanh",   name: "Xám xanh thép",           group: "Trung tính", brand: "#334E68", sun: "#F0B429", sky: "#2680C2", ink: "#0A121B" }
+  ];
+
+  /* các biến màu gốc trong style.css — dùng khi theme là mặc định */
+  const ORIGINAL_VARS = {"brand": "#A31000", "brand-lt": "#BE1400", "brand-dk": "#7C0C00", "brand-deep": "#6E0A00", "hz-1": "#6E0A00", "hz-2": "#A31000", "hz-3": "#B32407", "hz-4": "#C4400A", "hz-5": "#D9700E", "hz-6": "#EFA43A", "hz-7": "#F6CE84", "hz-8": "#E4EFF6", "sun": "#FFB300", "sun-lt": "#FFC933", "sun-hi": "#FFD666", "on-sun": "#3E2200", "sky": "#1C79A8", "sky-dk": "#0B4A7A", "sky-pale": "#EAF3F9", "sky-tint": "#F4F9FC", "ink": "#1A0805", "ink-2": "#2A100A", "ink-3": "#120503", "line-d": "#4A1F14", "soft": "#FBE3DC", "soft-2": "#EDC6BC", "soft-3": "#CFA79D", "soft-4": "#A9837A", "cloud": "#FFFFFF", "cloud-2": "#FFFAF4", "cloud-3": "#F6EEE5", "line": "#E7DACC", "text": "#241310", "muted": "#71564F", "brand-rgb": "163,16,0", "deep-rgb": "110,10,0", "ink3-rgb": "16,5,3", "text-rgb": "36,19,16", "glow-rgb": "255,238,178", "glow2-rgb": "255,196,80"};
+
+  /* ---- công cụ màu ---- */
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  function hexToRgb(h) {
+    h = String(h || "").trim().replace("#", "");
+    if (h.length === 3) h = h.split("").map(c => c + c).join("");
+    if (!/^[0-9a-f]{6}$/i.test(h)) return null;
+    return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16));
+  }
+  const rgbToHex = c => "#" + c.map(x => Math.round(clamp(x, 0, 255)).toString(16).padStart(2, "0")).join("").toUpperCase();
+  function rgbToHsl([r, g, b]) {
+    r /= 255; g /= 255; b /= 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+    let h = 0, s = 0;
+    if (mx !== mn) {
+      const d = mx - mn;
+      s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      h *= 60;
+    }
+    return { h, s: s * 100, l: l * 100 };
+  }
+  function hsl(h, s, l) {
+    h = ((h % 360) + 360) % 360; s = clamp(s, 0, 100) / 100; l = clamp(l, 0, 100) / 100;
+    const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+    return rgbToHex([f(0) * 255, f(8) * 255, f(4) * 255]);
+  }
+  const mix = (a, b, t) => { const x = hexToRgb(a), y = hexToRgb(b); return rgbToHex(x.map((v, i) => v + (y[i] - v) * t)); };
+  const rgbStr = h => hexToRgb(h).join(",");
+  function lum(h) {
+    return hexToRgb(h).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); })
+      .reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+  }
+  const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+  const hueDist = (a, b) => { const d = Math.abs(a - b) % 360; return d > 180 ? 360 - d : d; };
+
+  /* chuẩn hóa theme lưu trong data.json; thiếu / sai thì về mặc định */
+  function normTheme(t) {
+    const o = Object.assign({}, THEME_DEFAULT);
+    if (t) ["brand", "sun", "sky", "ink"].forEach(k => { const c = hexToRgb(t[k]); if (c) o[k] = rgbToHex(c); });
+    o.preset = t && t.preset ? String(t.preset) : o.preset;
+    return o;
+  }
+  const isDefaultTheme = t => { const n = normTheme(t); return ["brand", "sun", "sky", "ink"].every(k => n[k] === THEME_DEFAULT[k]); };
+
+  /* Tính toàn bộ biến màu của web từ 4 màu gốc */
+  function themeVars(t) {
+    if (isDefaultTheme(t)) return Object.assign({}, ORIGINAL_VARS);
+    t = normTheme(t);
+    const B = rgbToHsl(hexToRgb(t.brand)), S = rgbToHsl(hexToRgb(t.sun)),
+          K = rgbToHsl(hexToRgb(t.sky)), I = rgbToHsl(hexToRgb(t.ink));
+    const v = {};
+    // chủ đạo
+    v.brand = t.brand;
+    v["brand-lt"] = hsl(B.h, B.s, Math.min(B.l + 5, 62));
+    v["brand-dk"] = hsl(B.h, B.s, Math.max(B.l - 8, 7));
+    v["brand-deep"] = hsl(B.h, B.s, Math.max(B.l - 10.5, 5));
+    // nhấn
+    v.sun = t.sun;
+    v["sun-lt"] = mix(t.sun, "#FFFFFF", .2);
+    v["sun-hi"] = mix(t.sun, "#FFFFFF", .4);
+    v["on-sun"] = contrast("#FFFFFF", t.sun) >= 4.5 ? "#FFFFFF" : hsl(S.h, Math.min(S.s, 100), 12);
+    // phụ
+    v.sky = t.sky;
+    v["sky-dk"] = hsl(K.h, K.s, Math.max(K.l - 14, 10));
+    v["sky-pale"] = mix(t.sky, "#FFFFFF", .9);
+    v["sky-tint"] = mix(t.sky, "#FFFFFF", .95);
+    // dải chuyển màu đầu trang
+    v["hz-1"] = v["brand-deep"]; v["hz-2"] = t.brand;
+    const sunset = hueDist(B.h, S.h) <= 100 && B.s > 25;
+    if (sunset) {           // chủ đạo và màu nhấn gần nhau → hoàng hôn chuyển sang màu nhấn
+      v["hz-3"] = mix(t.brand, t.sun, .12); v["hz-4"] = mix(t.brand, t.sun, .28);
+      v["hz-5"] = mix(t.brand, t.sun, .55); v["hz-6"] = mix(mix(t.sun, t.brand, .08), "#FFFFFF", .15);
+      v["hz-7"] = mix(t.sun, "#FFFFFF", .5);
+    } else {                // khác xa nhau → nhạt dần theo màu chủ đạo, không pha ra màu bẩn
+      v["hz-3"] = hsl(B.h, B.s, B.l + 5);  v["hz-4"] = hsl(B.h, B.s * .95, B.l + 11);
+      v["hz-5"] = hsl(B.h, B.s * .9, B.l + 19); v["hz-6"] = hsl(B.h, B.s * .8, Math.min(B.l + 31, 78));
+      v["hz-7"] = hsl(B.h, B.s * .7, Math.min(B.l + 45, 88));
+    }
+    v["hz-8"] = mix(t.sky, "#FFFFFF", .88);
+    // nền tối
+    v.ink = t.ink;
+    v["ink-2"] = hsl(I.h, I.s, I.l + 4);
+    v["ink-3"] = hsl(I.h, I.s, Math.max(I.l - 2.5, 1.5));
+    v["line-d"] = hsl(I.h, I.s * .85, I.l + 12);
+    // chữ trên nền tối
+    const f = clamp(I.s / 68, 0, 1);
+    v.soft = hsl(I.h, 82 * f, 92); v["soft-2"] = hsl(I.h, 62 * f, 83);
+    v["soft-3"] = hsl(I.h, 35 * f, 71); v["soft-4"] = hsl(I.h, 22 * f, 57);
+    // nền sáng: tông ấm (đỏ/cam/nâu) dùng màu kem, tông khác ngả nhẹ theo nền tối
+    const warm = I.h < 50 || I.h > 340, Lh = warm ? 32 : I.h;
+    v.cloud = "#FFFFFF";
+    v["cloud-2"] = hsl(Lh, (warm ? 100 : 60) * f, 98);
+    v["cloud-3"] = hsl(Lh, (warm ? 52 : 35) * f, 93.5);
+    v.line = hsl(Lh, (warm ? 37 : 25) * f, 85);
+    v.text = hsl(I.h, 38 * f, 10);
+    v.muted = hsl(I.h, 18 * f, 38);
+    // biến dạng "r,g,b" cho bóng đổ, lớp phủ mờ
+    v["brand-rgb"] = rgbStr(t.brand);
+    v["deep-rgb"] = rgbStr(v["brand-deep"]);
+    v["ink3-rgb"] = rgbStr(v["ink-3"]);
+    v["text-rgb"] = rgbStr(v.text);
+    v["glow-rgb"] = rgbStr(mix(t.sun, "#FFFFFF", .6));
+    v["glow2-rgb"] = rgbStr(t.sun);
+    return v;
+  }
+  /* Thẻ <style> chèn vào index.html — màu mặc định thì không chèn gì (dùng nguyên style.css) */
+  function themeStyle(t) {
+    if (!t || isDefaultTheme(t)) return "";
+    const v = themeVars(t);
+    return `<style id="aioti-theme">:root{${Object.keys(v).map(k => `--${k}:${v[k]}`).join(";")}}</style>\n`;
+  }
+  /* Kiểm tra màu dễ đọc — trả về danh sách cảnh báo */
+  function themeChecks(t) {
+    const v = themeVars(t), out = [];
+    const chk = (a, b, min, txt) => { const c = contrast(a, b); if (c < min) out.push({ txt, ratio: Math.round(c * 10) / 10 }); };
+    chk("#FFFFFF", v.brand, 4.5, "Chữ trắng trên nút Gọi (màu chủ đạo) hơi khó đọc — nên chọn màu chủ đạo đậm hơn.");
+    chk(v.brand, v["cloud-2"], 4.5, "Tiêu đề nhỏ và con số (màu chủ đạo) trên nền sáng hơi nhạt — nên chọn màu chủ đạo đậm hơn.");
+    chk(v["on-sun"], v.sun, 4.5, "Chữ trên nút màu nhấn khó đọc — nên chọn màu nhấn sáng hơn hoặc đậm hẳn.");
+    chk(v["sun-lt"], v.ink, 4.5, "Chữ màu nhấn trên nền tối hơi khó đọc — nên chọn màu nhấn sáng hơn.");
+    chk(v["soft-2"], v.ink, 7, "Chữ trên phần nền tối chưa đủ rõ — nên chọn màu nền tối đậm hơn.");
+    chk("#FFFFFF", v["brand-deep"], 7, "Thanh menu trên cùng chưa đủ tối để chữ trắng nổi rõ — nên chọn màu chủ đạo đậm hơn.");
+    return out;
+  }
+
+  /* =====================================================================
+     LOGO & HÌNH ẢNH — các ô ảnh thay được từ trang quản lý
+     Ảnh tải lên lưu ở img/u/… ; ảnh gốc trong img/ luôn giữ nguyên để khôi phục.
+     recolor: không tải ảnh riêng thì tự đổi màu theo màu chủ đạo (khi không dùng màu gốc)
+     ===================================================================== */
+  const IMG_SLOTS = [
+    { k: "logo",       file: "img/logo-trang.png",      name: "Logo nhỏ — thanh menu trên cùng", hint: "PNG nền trong suốt, hình màu trắng. Ngang khoảng 240–480px.", w: 480, white: true },
+    { k: "logoFull",   file: "img/logo-trang-full.png", name: "Logo lớn — chân trang",            hint: "PNG nền trong suốt, hình màu trắng. Ngang khoảng 600px.", w: 600, white: true },
+    { k: "eagleBg",    file: "img/daibang-trang.png",   name: "Đại bàng mờ — nền đầu trang",       hint: "PNG nền trong suốt, hình màu trắng (web tự làm mờ).", w: 840, white: true },
+    { k: "eagleBtn",   file: "img/daibang-nut.png",     name: "Đại bàng trên nút lên đầu trang",   hint: "PNG nền trong suốt, hình màu trắng, nhỏ gọn.", w: 180, white: true },
+    { k: "eagleSmall", file: "img/daibang-do.png",      name: "Đại bàng nhỏ — phía trên mục Cam kết", hint: "Không tải ảnh thì tự đổi theo màu chủ đạo. Ảnh riêng: PNG nền trong suốt.", w: 240, recolor: true },
+    { k: "camera",     file: "img/icon-camera.png",     name: "Biểu tượng camera — thẻ dịch vụ",   hint: "PNG nền trong suốt, hình màu trắng.", w: 160, white: true },
+    { k: "favicon",    file: "img/icon-180.png",        name: "Biểu tượng web — tab trình duyệt, màn hình điện thoại", hint: "Không tải ảnh thì tự đổi theo màu chủ đạo. Ảnh riêng: hình vuông, tự cắt giữa.", w: 180, square: true, recolor: true },
+    { k: "share",      file: "thumbnail.jpg",           name: "Ảnh khi gửi link qua Zalo / Facebook", hint: "Ảnh ngang 1200×630, tự cắt cho vừa. Zalo/Facebook có thể vài ngày sau mới đổi.", w: 1200, h: 630, jpg: true }
+  ];
+  const brandHex = D => normTheme(D && D.theme).brand.slice(1);
+  /* đường dẫn ảnh đang dùng cho một ô */
+  function imgPath(D, k) {
+    const up = D && D.images && D.images[k];
+    if (up) return up;
+    const sl = IMG_SLOTS.find(x => x.k === k);
+    if (sl.recolor && D && D.theme && !isDefaultTheme(D.theme)) return `img/u/${k}-${brandHex(D)}${k === "favicon" ? "-180" : ""}.png`;
+    return sl.file;
+  }
+  const favSmall = p => p === "img/icon-180.png" ? "img/favicon.png" : p.replace(/-180\.png$/, "-64.png");
+  /* các file ảnh tự đổi màu cần có trên GitHub (trang quản lý tạo khi đăng) */
+  function recolorNeeds(D) {
+    const out = [];
+    IMG_SLOTS.filter(s => s.recolor).forEach(s => {
+      const p = imgPath(D, s.k);
+      if (!p.startsWith(`img/u/${s.k}-`) || (D.images && D.images[s.k])) return;
+      out.push({ k: s.k, path: p, src: s.file, size: s.k === "favicon" ? 180 : 0 });
+      if (s.k === "favicon") out.push({ k: s.k, path: favSmall(p), src: "img/favicon.png", size: 64 });
+    });
+    return out;
+  }
+  /* mọi file trong img/u/ đang được web dùng — để dọn file cũ khi đăng */
+  function imgUsed(D) {
+    const u = new Set();
+    IMG_SLOTS.forEach(s => { const p = imgPath(D, s.k); if (p.startsWith("img/u/")) { u.add(p); if (s.k === "favicon") u.add(favSmall(p)); } });
+    return u;
+  }
+
   /* Ảnh đại diện cho thẻ dịch vụ: ảnh gắn ★ → ảnh chỉ định sẵn → ảnh đầu tiên cùng ngành → ảnh đầu tiên bất kỳ */
   function pickCover(g, gallery) {
     return gallery.find(p => p.cat === g.cat && p.cover)
@@ -47,10 +251,10 @@
       || gallery[0] || null;
   }
 
-  function serviceCard(g, i, gallery) {
+  function serviceCard(g, i, gallery, P) {
     const pic = pickCover(g, gallery);
     const img = pic ? `<img src="anh/t-${esc(pic.id)}.jpg" alt="${esc(pic.cap || g.name)}" loading="lazy">` : "";
-    const picBox = `<div class="svc-pic"><span class="rank">NHÓM ${String(i + 1).padStart(2, "0")}</span>${ICONS[g.cat] || ""}${img}</div>`;
+    const picBox = `<div class="svc-pic"><span class="rank">NHÓM ${String(i + 1).padStart(2, "0")}</span>${(ICONS[g.cat] || "").replace("img/icon-camera.png", esc(P.camera))}${img}</div>`;
     const items = (g.items || []).filter(x => String(x).trim()).map(x => `<li>${rich(x)}</li>`).join("\n                ");
     const txt = `<div class="svc-txt">
               <span class="sub">${esc(g.who)}</span>
@@ -85,6 +289,7 @@
     const zalo = "https://zalo.me/" + esc(C.zalo);
     const years = Math.max(1, now.getFullYear() - (+S.fromYear || now.getFullYear()));
     const groups = (D.services.groups || []);
+    const P = {}; IMG_SLOTS.forEach(s => { P[s.k] = imgPath(D, s.k); });
 
     const tiles = gal.map((p, i) => {
       const cap = esc(p.cap || CATS[p.cat] || "");
@@ -108,7 +313,7 @@
     const V = D.video || {};
     const vidTiles = vids.map(v => {
       const cap = esc(v.cap || CATS[v.cat] || "Video công trình");
-      return `      <button class="vid rv" data-yt="${esc(v.id)}"${v.short ? ' data-short="1"' : ""} aria-label="Xem video: ${cap}">
+      return `      <button class="vid rv" data-cat="${esc(v.cat)}" data-yt="${esc(v.id)}"${v.short ? ' data-short="1"' : ""} aria-label="Xem video: ${cap}">
         <span class="vid-img"><img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="${cap}" loading="lazy"><span class="vid-play" aria-hidden="true"></span>${v.short ? '<span class="vid-tag">SHORTS</span>' : ""}</span>
         <span class="vid-cap">${CATS[v.cat] ? `<i>${esc(CATS[v.cat])}</i>` : ""}${cap}</span>
       </button>`;
@@ -122,6 +327,7 @@
       <h2>${esc(V.title || "Video công trình")}</h2>
       ${V.intro ? `<p>${rich(V.intro)}</p>` : ""}
     </div>
+    <div class="filt" id="vfilt" hidden></div>
     <div class="vgrid">
 ${vidTiles}
     </div>
@@ -165,25 +371,25 @@ ${priceTiles}
 <meta property="og:url" content="${esc(D.site.url)}">
 <meta property="og:title" content="AIOTI — Công nghệ · An ninh · Năng lượng">
 <meta property="og:description" content="Điện mặt trời · Camera an ninh · Nhà thông minh. Gọi hotline ${esc(C.phoneDisplay)} — tư vấn miễn phí, báo giá ghi rõ hãng và model.">
-<meta property="og:image" content="${esc(D.site.url)}thumbnail.jpg">
+<meta property="og:image" content="${esc(D.site.url)}${esc(P.share)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="${esc(D.site.url)}">
-<meta name="theme-color" content="#6E0A00">
-<link rel="icon" type="image/png" href="img/favicon.png">
-<link rel="apple-touch-icon" href="img/icon-180.png">
+<meta name="theme-color" content="${D.theme && !isDefaultTheme(D.theme) ? themeVars(D.theme)["brand-deep"] : "#6E0A00"}">
+<link rel="icon" type="image/png" href="${esc(favSmall(P.favicon))}">
+<link rel="apple-touch-icon" href="${esc(P.favicon)}">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=${ver}">
-</head>
+${themeStyle(D.theme)}</head>
 <body>
 
 <header>
   <nav class="nav wrap" id="nav">
-    <a class="brand" href="#top"><img class="mark" src="img/logo-trang.png" alt="Logo AIOTI"><span><b>AIOTI</b><i>Công nghệ · An ninh · Năng lượng</i></span></a>
+    <a class="brand" href="#top"><img class="mark" src="${esc(P.logo)}" alt="Logo AIOTI"><span><b>AIOTI</b><i>Công nghệ · An ninh · Năng lượng</i></span></a>
     <a class="lnk" href="#dichvu">Dịch vụ</a>
 ${gal.length ? `    <a class="lnk" href="#congtrinh">Công trình</a>\n` : ""}${vids.length ? `    <a class="lnk" href="#video">Video</a>\n` : ""}${prices.length ? `    <a class="lnk" href="#banggia">Bảng giá</a>\n` : ""}    <a class="lnk" href="#visao">Vì sao chọn AIOTI</a>
     <a class="lnk" href="#lienhe">Liên hệ</a>
@@ -205,7 +411,7 @@ ${gal.length ? `    <a class="lnk" href="#congtrinh">Công trình</a>\n` : ""}${
       ${gal.length ? `<a class="btn btn-line" href="#congtrinh">Xem công trình đã làm</a>` : `<a class="btn btn-line" href="#dichvu">Xem dịch vụ</a>`}
     </div>
   </div>
-  <img class="eagle" src="img/daibang-trang.png" alt="" aria-hidden="true">
+  <img class="eagle" src="${esc(P.eagleBg)}" alt="" aria-hidden="true">
   <div class="clouds" aria-hidden="true">
     <svg viewBox="0 0 1440 110" preserveAspectRatio="none">
       <path fill="rgba(255,255,255,.46)" d="M0,74 C150,30 260,96 420,66 C580,36 660,88 820,70 C980,52 1090,96 1240,72 C1330,58 1390,70 1440,64 L1440,110 L0,110 Z"/>
@@ -216,9 +422,9 @@ ${gal.length ? `    <a class="lnk" href="#congtrinh">Công trình</a>\n` : ""}${
 
 <div class="stats">
   <dl class="wrap stats-g">
-    <div><dd id="stY" data-from="${+S.fromYear}">${years}<small> năm</small></dd><dt>Trong nghề từ ${+S.fromYear}</dt></div>
-    <div><dd>${esc(S.devices)}</dd><dt>Thiết bị an ninh đã lắp đặt</dt></div>
-    <div><dd>${esc(S.kwp)}<small> kWp</small></dd><dt>Điện mặt trời đã hòa lưới</dt></div>
+    <div><dd id="stY" data-from="${+S.fromYear}">${years}<small> năm</small></dd><dt>${esc(S.labelYear != null && S.labelYear !== "" ? S.labelYear : "Trong nghề từ {năm}").replace(/\{n[aă]m\}/gi, +S.fromYear)}</dt></div>
+    <div><dd>${esc(S.devices)}</dd><dt>${esc(S.labelDevices || "Thiết bị an ninh đã lắp đặt")}</dt></div>
+    <div><dd>${esc(S.kwp)}<small> kWp</small></dd><dt>${esc(S.labelKwp || "Điện mặt trời đã hòa lưới")}</dt></div>
   </dl>
 </div>
 
@@ -232,10 +438,10 @@ ${gal.length ? `    <a class="lnk" href="#congtrinh">Công trình</a>\n` : ""}${
     </div>
 
     <div class="svcs">
-${groups[0] ? serviceCard(groups[0], 0, gal) : ""}
+${groups[0] ? serviceCard(groups[0], 0, gal, P) : ""}
 
       <div class="svcs-row">
-${groups.slice(1).map((g, i) => serviceCard(g, i + 1, gal)).join("\n\n")}
+${groups.slice(1).map((g, i) => serviceCard(g, i + 1, gal, P)).join("\n\n")}
       </div>
     </div>
   </div>
@@ -258,7 +464,7 @@ ${tiles}
 </section>` : ""}
 ${videoSection}${pricingSection}
 <div class="mark-div" aria-hidden="true">
-  <span></span><img src="img/daibang-do.png" alt=""><span></span>
+  <span></span><img src="${esc(P.eagleSmall)}" alt=""><span></span>
 </div>
 
 <!-- ===== VÌ SAO ===== -->
@@ -326,7 +532,7 @@ ${vows}
   <div class="wrap">
     <div class="ft">
       <div class="ft-b">
-        <img class="mark-ft" src="img/logo-trang-full.png" alt="AIOTI GROUP">
+        <img class="mark-ft" src="${esc(P.logoFull)}" alt="AIOTI GROUP">
         <p>Công nghệ · An ninh · Năng lượng.<br>Điện mặt trời, camera an ninh, nhà thông minh và kiểm soát ra vào cho hộ gia đình, doanh nghiệp và nhà xưởng tại TP.HCM.</p>
       </div>
       <div>
@@ -347,7 +553,7 @@ ${gal.length ? `        <a href="#congtrinh">Công trình đã làm</a>\n` : ""}
   </div>
 </footer>
 
-<button class="top" id="topBtn" aria-label="Lên đầu trang"><img src="img/daibang-nut.png" alt=""></button>
+<button class="top" id="topBtn" aria-label="Lên đầu trang"><img src="${esc(P.eagleBtn)}" alt=""></button>
 
 <div class="dock">
   <a class="btn btn-red" href="${tel}">Gọi ngay</a>
@@ -360,7 +566,7 @@ ${gal.length ? `        <a href="#congtrinh">Công trình đã làm</a>\n` : ""}
 `;
   }
 
-  const api = { renderSite, CATS, pickCover };
+  const api = { renderSite, CATS, pickCover, THEME_DEFAULT, PRESETS, normTheme, isDefaultTheme, themeVars, themeStyle, themeChecks, contrast, IMG_SLOTS, imgPath, favSmall, recolorNeeds, imgUsed };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.AIOTIRender = api;
 })(typeof window !== "undefined" ? window : this);
