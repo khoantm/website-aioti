@@ -133,6 +133,43 @@ details.ttl>summary{color:var(--brand)}
 .dropov b{display:block;font-family:'Be Vietnam Pro';font-size:21px;color:var(--brand);margin-bottom:6px}
 .dropov span{font-size:14.5px;color:var(--muted)}
 .dhint{display:block;text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
+/* ---- kiểu xem & kéo thả ---- */
+.views{display:flex;gap:0;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;width:max-content;margin:0 0 10px;background:var(--cloud)}
+.views button{border:0;background:transparent;padding:8px 13px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px}
+.views button+button{border-left:1.5px solid var(--line)}
+.views button.on{background:var(--brand);color:#fff}
+.vhint{font-size:12.5px;color:var(--muted);margin:-4px 2px 10px}
+.hdl{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;display:inline-flex;align-items:center;justify-content:center;
+  min-width:40px;height:36px;border:1.5px dashed var(--line);border-radius:8px;color:var(--muted);font-size:18px;background:var(--cloud)}
+.hdl:active{cursor:grabbing}
+.list.grid{display:grid;gap:10px}
+.g-lg{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.g-xl{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.it.tile{display:block;padding:6px;cursor:default;user-select:none;-webkit-user-select:none;transition:box-shadow .12s,border-color .12s}
+.it.tile .th{width:100%;height:auto;aspect-ratio:4/3}
+.it.tile .th img{pointer-events:none;-webkit-user-drag:none}
+.it.tile .hdl{position:absolute;left:5px;bottom:5px;min-width:30px;height:30px;font-size:15px;border-style:solid;border-color:rgba(255,255,255,.7);
+  background:rgba(26,8,5,.62);color:#fff}
+.it.tile .ed{position:absolute;right:5px;bottom:5px;width:30px;height:30px;border-radius:7px;border:0;background:rgba(255,255,255,.92);
+  font-size:14px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.it.tile .cv{position:absolute;left:5px;top:28px;background:var(--sun);color:var(--on-sun);font-size:11px;font-weight:700;padding:1px 6px;border-radius:6px}
+.it.tile .nw{position:absolute;left:5px;top:50px;background:var(--sun);color:var(--on-sun);font-size:10px;font-weight:700;padding:1px 5px;border-radius:6px}
+.tcap{padding:6px 3px 2px;font-size:12.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.g-xl .tcap{font-size:13.5px}
+.tcap i{font-style:normal;font-weight:700;font-size:10.5px;letter-spacing:.03em;padding:1px 5px;border-radius:4px;margin-right:4px;color:#fff}
+.tcap i.c-solar{background:#C77700}.tcap i.c-camera{background:var(--brand)}.tcap i.c-smart{background:#1C6E8C}
+.tcap em{color:var(--muted);font-style:italic}
+.it.moving{opacity:.3}
+.it.just{animation:just 1.1s ease}
+@keyframes just{0%{box-shadow:0 0 0 4px var(--sun)}100%{box-shadow:0 0 0 0 transparent}}
+body.dragging,body.dragging *{cursor:grabbing!important;user-select:none!important}
+.ghost{position:fixed;z-index:120;pointer-events:none;width:92px;height:70px;border-radius:9px;overflow:visible;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);transform:rotate(-3deg);opacity:.95}
+.ghost img{width:100%;height:100%;object-fit:cover;border-radius:9px;border:2px solid #fff}
+.ghost b{position:absolute;right:-9px;top:-9px;min-width:26px;height:26px;border-radius:13px;background:var(--brand);color:#fff;
+  font-size:13px;display:flex;align-items:center;justify-content:center;padding:0 6px;border:2px solid #fff}
+.dropline{position:fixed;z-index:119;pointer-events:none;background:var(--brand);border-radius:3px;box-shadow:0 0 0 3px rgba(163,16,0,.18);display:none}
+@media(max-width:520px){ .g-lg{grid-template-columns:repeat(3,1fr);gap:7px} .g-xl{grid-template-columns:repeat(2,1fr);gap:8px} .views button{padding:8px 10px} }
 .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:14.5px;border:2px dashed var(--line);border-radius:12px}
 
 /* thanh đăng dưới cùng */
@@ -249,6 +286,12 @@ code{font-family:'IBM Plex Mono';font-size:13.5px;background:var(--cream-2);padd
       <button class="pill" data-c="camera">Camera</button>
       <button class="pill" data-c="smart">Nhà thông minh</button>
     </div>
+    <div class="views" id="wViews">
+      <button data-v="list" type="button" title="Danh sách — sửa chú thích trực tiếp">☰ Danh sách</button>
+      <button data-v="lg" type="button" title="Biểu tượng lớn">▦ Lớn</button>
+      <button data-v="xl" type="button" title="Biểu tượng rất lớn">⬛ Rất lớn</button>
+    </div>
+    <p class="vhint" id="vHint"></p>
     <div class="tb" id="wTools">
       <button class="ib" data-t="all" type="button">Chọn tất cả</button>
       <button class="ib" data-t="none" type="button">Bỏ chọn</button>
@@ -404,7 +447,7 @@ async function load(){
   sel=new Set(); undo=null; if($("wMsg")){$("wMsg").innerHTML="";$("dupOut").innerHTML="";}
   $("acctInfo").innerHTML=`Kho: <b>${esc(cfg.owner)}/${esc(cfg.repo)}</b> · nhánh <b>${esc(cfg.branch)}</b><br>Phiên bản đang sửa: <code>${commit.slice(0,7)}</code>`;
   $("viewSite").href=D.site&&D.site.url?D.site.url:"../";
-  buildForms(); renderWorks(); renderVideos(); renderPrices(); updateBar();
+  buildForms(); setView(wView); renderVideos(); renderPrices(); updateBar();
   $("tabs").classList.remove("hide"); $("bar").classList.remove("hide");
   switchTab(curTab||"works");
 }
@@ -529,22 +572,50 @@ function thumbOf(it,kind){
   if(nf) return nf.url;
   return raw(kind==="gia"?`gia/t-${it.id}.jpg`:`anh/t-${it.id}.jpg`);
 }
+let wView=(()=>{ try{ return localStorage.getItem("aioti_wview")||"list"; }catch(_){ return "list"; } })();
+const CSHORT={solar:"Điện MT",camera:"Camera",smart:"Nhà TM"};
+function setView(v){
+  wView=v; try{ localStorage.setItem("aioti_wview",v); }catch(_){}
+  $("wViews").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  const touch=window.matchMedia&&matchMedia("(pointer:coarse)").matches;
+  $("vHint").textContent=v==="list"
+    ? "Giữ ⠿ và kéo để đổi chỗ. Tích nhiều ảnh rồi kéo ⠿ của một ảnh để chuyển cả nhóm."
+    : (touch ? "Chạm để chọn nhiều ảnh · giữ ⠿ kéo để đổi chỗ (chuyển cả nhóm đã chọn) · ✎ để sửa chú thích"
+             : "Bấm chọn · Ctrl / Shift để chọn nhiều · kéo ảnh để đổi chỗ (kéo cả nhóm đã chọn) · bấm đúp hoặc ✎ để sửa · Delete để xóa");
+  renderWorks();
+}
 function renderWorks(){
   const L=$("wList");
   const vis=D.gallery.map((p,i)=>i).filter(i=>wFilter==="all"||D.gallery[i].cat===wFilter);
   for(const id of [...sel]) if(!D.gallery.some(p=>p.id===id)) sel.delete(id);
   updTools(vis.length);
-  if(!vis.length){L.innerHTML=`<div class="empty">Chưa có ảnh nào${wFilter!=="all"?" trong ngành này":""}.</div>`;return;}
+  L.className="list"+(wView!=="list"?" grid g-"+wView:"");
+  if(!vis.length){L.className="list";L.innerHTML=`<div class="empty">Chưa có ảnh nào${wFilter!=="all"?" trong ngành này":""}.</div>`;return;}
+  if(wView!=="list"){
+    L.innerHTML=vis.map(i=>{
+      const p=D.gallery[i], isNew=newFiles.has(p.id), cap=String(p.cap||"").trim();
+      return `<div class="it tile${isNew?" new":""}${sel.has(p.id)?" sel":""}" data-i="${i}" data-id="${esc(p.id)}">
+        <div class="th"><img src="${esc(thumbOf(p,"anh"))}" alt="" loading="lazy" draggable="false"><span class="no">${String(i+1).padStart(2,"0")}</span>
+          <label class="ck" title="Chọn ảnh"><input type="checkbox" data-sel${sel.has(p.id)?" checked":""}></label>
+          ${p.cover?'<span class="cv">★</span>':""}${isNew?'<span class="nw">MỚI</span>':""}
+          <span class="hdl" title="Giữ và kéo để đổi chỗ">⠿</span>
+          <button class="ed" data-a="edit" type="button" title="Sửa">✎</button></div>
+        <div class="tcap"><i class="c-${esc(p.cat)}">${CSHORT[p.cat]||""}</i>${cap?esc(cap):"<em>Chưa có chú thích</em>"}</div>
+      </div>`;
+    }).join("");
+    return;
+  }
   L.innerHTML=vis.map((i,k)=>{
     const p=D.gallery[i], isNew=newFiles.has(p.id);
-    return `<div class="it${isNew?" new":""}${sel.has(p.id)?" sel":""}" data-i="${i}">
-      <div class="th"><img src="${esc(thumbOf(p,"anh"))}" alt="" loading="lazy"><span class="no">${String(i+1).padStart(2,"0")}</span>
+    return `<div class="it${isNew?" new":""}${sel.has(p.id)?" sel":""}" data-i="${i}" data-id="${esc(p.id)}">
+      <div class="th"><img src="${esc(thumbOf(p,"anh"))}" alt="" loading="lazy" draggable="false"><span class="no">${String(i+1).padStart(2,"0")}</span>
         <label class="ck" title="Chọn ảnh"><input type="checkbox" data-sel${sel.has(p.id)?" checked":""}></label></div>
       <div class="flds">
         <select data-f="cat">${Object.entries(CATS).map(([k,v])=>`<option value="${k}"${p.cat===k?" selected":""}>${v}</option>`).join("")}</select>
         <textarea data-f="cap" placeholder="Chú thích kỹ thuật — ví dụ: Đầu ghi 8 kênh, dây đi trong ống có nhãn">${esc(p.cap)}</textarea>
       </div>
       <div class="acts">
+        <span class="hdl" title="Giữ và kéo để đổi chỗ">⠿</span>
         <button class="ib star${p.cover?" on":""}" data-a="star" title="Ảnh đại diện ngành">★</button>
         <button class="ib" data-a="up" ${k===0?"disabled":""}>↑</button>
         <button class="ib" data-a="down" ${k===vis.length-1?"disabled":""}>↓</button>
@@ -573,6 +644,7 @@ $("wList").addEventListener("click",e=>{
   if(a==="up"&&k>0){ const j=vis[k-1]; [D.gallery[i],D.gallery[j]]=[D.gallery[j],D.gallery[i]]; }
   if(a==="down"&&k<vis.length-1){ const j=vis[k+1]; [D.gallery[i],D.gallery[j]]=[D.gallery[j],D.gallery[i]]; }
   if(a==="del"){ removeIds([p.id]); return; }
+  if(a==="edit"){ editTile(p.id); return; }
   D.gallery.forEach(x=>{ if(x.cover===false) delete x.cover; });
   renderWorks(); updateBar();
 });
@@ -698,6 +770,151 @@ $("wList").addEventListener("change",e=>{
   e.target.checked?sel.add(id):sel.delete(id);
   row.classList.toggle("sel",e.target.checked); updTools();
 });
+
+/* ======================= KIỂU XEM · CHỌN · KÉO THẢ ĐỔI CHỖ ======================= */
+$("wViews").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(b) setView(b.dataset.v); });
+const visIds=()=>visIdx().map(i=>D.gallery[i].id);
+function updSelUI(){
+  document.querySelectorAll("#wList .it").forEach(t=>{
+    const on=sel.has(t.dataset.id); t.classList.toggle("sel",on);
+    const c=t.querySelector("input[data-sel]"); if(c) c.checked=on;
+  });
+  updTools();
+}
+let lastPick=null, lastPType="mouse", justDragged=false;
+function pickTile(e,id){
+  if(e.shiftKey&&lastPick){
+    const ids=visIds(), a1=ids.indexOf(lastPick), b1=ids.indexOf(id);
+    if(a1>=0&&b1>=0){ if(!(e.ctrlKey||e.metaKey)) sel.clear(); ids.slice(Math.min(a1,b1),Math.max(a1,b1)+1).forEach(x=>sel.add(x)); }
+  }else if(e.ctrlKey||e.metaKey||lastPType!=="mouse"){
+    sel.has(id)?sel.delete(id):sel.add(id); lastPick=id;
+  }else{
+    sel=new Set([id]); lastPick=id;
+  }
+  updSelUI();
+}
+$("wList").addEventListener("click",e=>{
+  if(wView==="list"||justDragged) return;
+  const t=e.target.closest(".it.tile"); if(!t) return;
+  if(e.target.closest("input,label,button,a,.hdl")) return;
+  pickTile(e,t.dataset.id);
+});
+$("wList").addEventListener("dblclick",e=>{
+  const t=e.target.closest(".it.tile"); if(!t||e.target.closest("input,label,button,.hdl")) return;
+  editTile(t.dataset.id);
+});
+
+/* ---- kéo thả đổi chỗ (chuột và cảm ứng) ---- */
+let pend=null, drag=null, scrollRaf=0;
+$("wList").addEventListener("pointerdown",e=>{
+  lastPType=e.pointerType||"mouse";
+  if(e.button!==undefined&&e.button!==0) return;
+  const it=e.target.closest(".it"); if(!it||!it.dataset.id) return;
+  const onHdl=!!e.target.closest(".hdl");
+  if(!onHdl){
+    if(wView==="list"||lastPType!=="mouse") return;          // danh sách / cảm ứng: chỉ kéo bằng tay nắm ⠿
+    if(e.target.closest("input,textarea,select,button,label,a")) return;
+  }
+  e.preventDefault();
+  pend={id:it.dataset.id,x:e.clientX,y:e.clientY};
+  if(onHdl) startDrag(e);
+});
+document.addEventListener("pointermove",e=>{
+  if(!pend&&!drag) return;
+  if(pend&&!drag){ if(Math.hypot(e.clientX-pend.x,e.clientY-pend.y)<6) return; startDrag(e); }
+  if(drag){ e.preventDefault(); moveDrag(e.clientX,e.clientY); }
+},{passive:false});
+document.addEventListener("pointerup",()=>{ if(drag) endDrag(true); pend=null; });
+document.addEventListener("pointercancel",()=>{ if(drag) endDrag(false); pend=null; });
+document.addEventListener("touchmove",e=>{ if(drag) e.preventDefault(); },{passive:false});
+
+function startDrag(e){
+  const id=pend.id;
+  const ids=sel.has(id)?D.gallery.filter(p=>sel.has(p.id)).map(p=>p.id):[id];
+  const p=D.gallery.find(x=>x.id===id);
+  const g=document.createElement("div"); g.className="ghost";
+  g.innerHTML=`<img src="${esc(thumbOf(p,"anh"))}" alt="">${ids.length>1?`<b>${ids.length}</b>`:""}`;
+  const ln=document.createElement("div"); ln.className="dropline";
+  document.body.append(g,ln); document.body.classList.add("dragging");
+  drag={ids,ghost:g,line:ln,target:null,after:false,x:e.clientX,y:e.clientY};
+  document.querySelectorAll("#wList .it").forEach(t=>{ if(ids.includes(t.dataset.id)) t.classList.add("moving"); });
+  moveDrag(e.clientX,e.clientY); autoScroll();
+}
+function moveDrag(x,y){
+  drag.x=x; drag.y=y;
+  drag.ghost.style.left=(x+14)+"px"; drag.ghost.style.top=(y+10)+"px";
+  const grid=wView!=="list";
+  let el=document.elementFromPoint(x,y); el=el&&el.closest?el.closest("#wList .it"):null;
+  if(!el){
+    const tiles=[...document.querySelectorAll("#wList .it")], last=tiles[tiles.length-1], L=$("wList").getBoundingClientRect();
+    if(last&&y>last.getBoundingClientRect().top&&y<L.bottom+60&&x>L.left-20&&x<L.right+20) el=last;
+  }
+  if(!el||drag.ids.includes(el.dataset.id)) return;          // đang ở trên chính nhóm đang kéo → giữ vị trí cũ
+  const r=el.getBoundingClientRect();
+  const after=grid?(x>r.left+r.width/2):(y>r.top+r.height/2);
+  drag.target=el.dataset.id; drag.after=after;
+  const s=drag.line.style; s.display="block";
+  if(grid){ s.left=((after?r.right:r.left)-3)+"px"; s.top=(r.top+4)+"px"; s.width="5px"; s.height=Math.max(20,r.height-8)+"px"; }
+  else    { s.left=(r.left+4)+"px"; s.top=((after?r.bottom:r.top)-3)+"px"; s.width=Math.max(20,r.width-8)+"px"; s.height="5px"; }
+}
+function autoScroll(){
+  if(!drag) return;
+  const edge=70, h=window.innerHeight, bar=($("bar")&&$("bar").offsetHeight)||0;
+  let dy=0;
+  if(drag.y<edge+60) dy=-Math.ceil((edge+60-drag.y)/5);
+  else if(drag.y>h-bar-edge) dy=Math.ceil((drag.y-(h-bar-edge))/5);
+  if(dy){ window.scrollBy(0,dy); moveDrag(drag.x,drag.y); }
+  scrollRaf=requestAnimationFrame(autoScroll);
+}
+function endDrag(commit){
+  cancelAnimationFrame(scrollRaf);
+  const dg=drag; drag=null; pend=null;
+  dg.ghost.remove(); dg.line.remove(); document.body.classList.remove("dragging");
+  justDragged=true; setTimeout(()=>justDragged=false,60);
+  document.querySelectorAll("#wList .it.moving").forEach(t=>t.classList.remove("moving"));
+  if(!commit||!dg.target) return;
+  moveIds(dg.ids,dg.target,dg.after);
+}
+function moveIds(ids,target,after){
+  const set=new Set(ids);
+  const moving=D.gallery.filter(p=>set.has(p.id)), rest=D.gallery.filter(p=>!set.has(p.id));
+  let k=rest.findIndex(p=>p.id===target); if(k<0) return;
+  if(after) k++;
+  const before=D.gallery.map(p=>p.id).join();
+  rest.splice(k,0,...moving); D.gallery=rest;
+  if(D.gallery.map(p=>p.id).join()===before) return;
+  renderWorks(); updateBar();
+  document.querySelectorAll("#wList .it").forEach(t=>{ if(set.has(t.dataset.id)) t.classList.add("just"); });
+}
+document.addEventListener("keydown",e=>{
+  if(drag&&e.key==="Escape"){ endDrag(false); return; }
+  if(!D||curTab!=="works"||document.querySelector(".ov")) return;
+  const t=e.target; if(t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.tagName==="SELECT")) return;
+  if(e.key==="Delete"&&sel.size){ e.preventDefault(); removeIds([...sel]); }
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="a"){ e.preventDefault(); visIds().forEach(x=>sel.add(x)); updSelUI(); }
+  else if(e.key==="Escape"&&sel.size){ sel.clear(); updSelUI(); }
+});
+
+/* ---- hộp sửa ảnh (kiểu xem Lớn / Rất lớn) ---- */
+function editTile(id){
+  const i=D.gallery.findIndex(x=>x.id===id); if(i<0) return;
+  const p=D.gallery[i];
+  const o=dialog(`<h3>Sửa ảnh ${String(i+1).padStart(2,"0")}</h3>
+    <img src="${esc(thumbOf(p,"anh"))}" alt="" style="width:100%;max-height:42vh;object-fit:contain;background:#1A0805;border-radius:8px;margin:4px 0 12px">
+    <div class="fld"><label>Ngành</label><select id="eCat">${Object.entries(CATS).map(([k,v])=>`<option value="${k}"${p.cat===k?" selected":""}>${v}</option>`).join("")}</select></div>
+    <div class="fld"><label>Chú thích kỹ thuật</label><textarea id="eCap" placeholder="Ví dụ: Đầu ghi 8 kênh, dây đi trong ống có nhãn">${esc(p.cap)}</textarea></div>
+    <button class="btn btn-line btn-w" id="eStar" type="button">${p.cover?"★ Đang là ảnh đại diện — bấm để bỏ":"☆ Đặt làm ảnh đại diện của ngành"}</button>
+    <div class="row"><button class="btn btn-line" id="eDel" type="button" style="color:var(--brand)">Xóa ảnh</button><button class="btn btn-red" id="eOk" type="button">Xong</button></div>`);
+  const done=()=>{ o.remove(); renderWorks(); updateBar(); };
+  o.querySelector("#eCap").addEventListener("input",ev=>{ p.cap=ev.target.value; updateBar(); });
+  o.querySelector("#eCat").addEventListener("change",ev=>{ p.cat=ev.target.value; if(p.cover) D.gallery.forEach(x=>{ if(x!==p&&x.cat===p.cat) delete x.cover; }); updateBar(); });
+  o.querySelector("#eStar").onclick=()=>{ const was=!!p.cover; D.gallery.forEach(x=>{ if(x.cat===p.cat) delete x.cover; }); if(!was) p.cover=true;
+    o.querySelector("#eStar").textContent=p.cover?"★ Đang là ảnh đại diện — bấm để bỏ":"☆ Đặt làm ảnh đại diện của ngành"; updateBar(); };
+  o.querySelector("#eDel").onclick=()=>{ o.remove(); removeIds([p.id]); };
+  o.querySelector("#eOk").onclick=done;
+  o.addEventListener("click",ev=>{ if(ev.target===o) done(); });
+  setTimeout(()=>o.querySelector("#eCap").focus(),50);
+}
 
 /* ======================= TÌM ẢNH TRÙNG ======================= */
 /* So "vân tay hình ảnh": thu nhỏ ảnh còn 9×8 điểm xám, ghi lại chiều sáng/tối giữa các điểm cạnh nhau.
